@@ -12,7 +12,7 @@ from rag_engine.source_catalog import build_source_catalog
 from rag_engine.storage import IndexStore
 from rag_engine.vector_indexer import VectorIndexer
 from rag_engine.vector_retriever import VectorRetriever
-from rag_engine.vector_storage import VectorIndexStore
+from rag_engine.vector_storage import VectorIndexCompatibilityError, VectorIndexStore
 
 
 class RagService:
@@ -66,7 +66,10 @@ class RagService:
         )
 
     def query_vector(self, question: str, top_k: int) -> QueryResponse:
-        raw_hits = self.vector_retriever.retrieve(question, top_k)
+        try:
+            raw_hits = self.vector_retriever.retrieve(question, top_k)
+        except VectorIndexCompatibilityError as exc:
+            raise ValueError(str(exc)) from exc
         hits = [self._enrich_local_hit(hit) for hit in raw_hits]
         answer = compose_answer(question, raw_hits)
         provider_meta = self.vector_store.metadata()
@@ -88,7 +91,10 @@ class RagService:
         return client.search(question=question, top_k=top_k, source_catalog=self.source_catalog)
 
     def hybrid_backend_query(self, question: str, top_k: int) -> dict:
-        raw_hits = self.vector_retriever.retrieve(question, top_k)
+        try:
+            raw_hits = self.vector_retriever.retrieve(question, top_k)
+        except VectorIndexCompatibilityError as exc:
+            raise ValueError(str(exc)) from exc
         hits = [self._enrich_local_hit(hit) for hit in raw_hits]
         return {
             "answer": "",

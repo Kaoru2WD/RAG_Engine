@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS vector_meta (
 """
 
 
+class VectorIndexCompatibilityError(RuntimeError):
+    pass
+
+
 class VectorIndexStore:
     def __init__(self, database_path: Path) -> None:
         self.database_path = database_path
@@ -110,7 +114,17 @@ class VectorIndexStore:
         scored_rows: list[tuple[float, sqlite3.Row]] = []
         for row in rows:
             embedding = json.loads(row["embedding_json"])
-            score = _cosine_similarity(query_embedding, [float(value) for value in embedding])
+            stored_embedding = [float(value) for value in embedding]
+            if len(query_embedding) != len(stored_embedding):
+                provider_name = self.metadata().get("provider_name", "unknown")
+                provider_detail = self.metadata().get("provider_detail", "unknown")
+                raise VectorIndexCompatibilityError(
+                    "Vector index embedding dimensions do not match the active query provider. "
+                    f"query={len(query_embedding)} stored={len(stored_embedding)} "
+                    f"provider={provider_name} detail={provider_detail}. "
+                    "Rebuild the vector index or restore the original embedding provider."
+                )
+            score = _cosine_similarity(query_embedding, stored_embedding)
             if score > 0.0:
                 scored_rows.append((score, row))
 
@@ -143,8 +157,6 @@ class VectorIndexStore:
 
 
 def _cosine_similarity(left: list[float], right: list[float]) -> float:
-    if len(left) != len(right):
-        raise ValueError("embedding dimensions do not match")
     numerator = sum(a * b for a, b in zip(left, right))
     left_norm = math.sqrt(sum(a * a for a in left))
     right_norm = math.sqrt(sum(b * b for b in right))

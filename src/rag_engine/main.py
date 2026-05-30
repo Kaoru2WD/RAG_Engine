@@ -45,9 +45,12 @@ def create_app() -> FastAPI:
 
     @app.post("/query", response_model=QueryResponse)
     def query_documents(request: QueryRequest) -> QueryResponse:
-        if request.engine == "vector":
-            return service.query_vector(request.question, request.top_k)
-        return service.query(request.question, request.top_k)
+        try:
+            if request.engine == "vector":
+                return service.query_vector(request.question, request.top_k)
+            return service.query(request.question, request.top_k)
+        except ValueError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     @app.post("/query/hybrid", response_model=QueryResponse)
     def query_hybrid_documents(request: QueryRequest) -> QueryResponse:
@@ -58,7 +61,10 @@ def create_app() -> FastAPI:
 
     @app.post("/backend/query")
     def backend_query(request: QueryRequest) -> dict:
-        return service.hybrid_backend_query(request.question, request.top_k)
+        try:
+            return service.hybrid_backend_query(request.question, request.top_k)
+        except ValueError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     return app
 
