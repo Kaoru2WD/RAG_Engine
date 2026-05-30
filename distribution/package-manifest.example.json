@@ -1,0 +1,19 @@
+{
+  "package_id": "hils-procedure-rag",
+  "display_name": "HILS Procedure Search",
+  "channel": "company",
+  "version": "2026.05.31-01",
+  "built_at": "2026-05-31T10:00:00+09:00",
+  "package_hash": "sha256:replace-with-package-hash",
+  "data_hash": "sha256:replace-with-data-hash",
+  "download_url": "./releases/rag-ui-2026-05-31.zip",
+  "entrypoint": "index.html",
+  "engine_modes": ["inline_bm25", "vector", "hybrid"],
+  "source": "Kaoru2WD/RAG_Engine",
+  "release_notes": [
+    "Vector default changed to title_source_text_800",
+    "Hybrid backend default points to /backend/query",
+    "Benchmark cases expanded"
+  ],
+  "minimum_runtime": "static-browser"
+}

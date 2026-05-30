@@ -238,6 +238,7 @@ python -m rag_engine.evaluate
 - [docs/architecture.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/architecture.md)
 - [docs/evaluation.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/evaluation.md)
 - [docs/runtime_ui.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/runtime_ui.md)
+- [docs/package_distribution.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/package_distribution.md)
 
 ## アーキテクチャ要点
 
