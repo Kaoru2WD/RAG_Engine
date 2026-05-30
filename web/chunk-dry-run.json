@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "documents_dir": "hils_rag_sample_docs",
+    "chunk_size": 800,
+    "chunk_overlap": 100,
+    "document_count": 10,
+    "chunk_count": 13,
+    "placeholder_rule_count": 3,
+    "note": "Raw chunk text is not persisted. This report stores only hashes and counts."
+  },
+  "documents": [
+    {
+      "document_ref": "DOC-001",
+      "file_type": "docx",
+      "chunk_count": 1,
+      "raw_title_sha256": "fa3cc7830241f488baf8cca17814d224472ce9c13749522744d498fbb7405c01",
+      "raw_path_sha256": "aab42ff2e2bb56cbe85369aea6608cb57ee03ec9370a57efcedf97d5e3894c8f"
+    },
+    {
+      "document_ref": "DOC-002",
+      "file_type": "docx",
+      "chunk_count": 1,
+      "raw_title_sha256": "5cb82fcdc6fc8590f015f27d49a95161b0b5e2e6d2bbccf894fcb41ee5e3926b",
+      "raw_path_sha256": "7d490083b62dd6dd0e660b6ffd01e98335d0b56a99df28352c55e557c77113ca"
+    },
+    {
+      "document_ref": "DOC-003",
+      "file_type": "xlsx",
+      "chunk_count": 1,
+      "raw_title_sha256": "89bc978566e355e5876d23b7d88136e324a16108f09c9b1c8f8d5f7a28bb20f1",
+      "raw_path_sha256": "e051c1147921ac4722cd498b1fc00f917523f962df951331e4ff5947545bd827"
+    },
+    {
+      "document_ref": "DOC-004",
+      "file_type": "xlsx",
+      "chunk_count": 1,
+      "raw_title_sha256": "11de94000ac43b32c112d7dd615f0eb8d9097d1ab749b7a4e7ddf9c02dbfba54",
+      "raw_path_sha256": "01625e62546be6626326154c9c2cc18e9c15b257e76ca22beb676cacb7435ad4"
+    },
+    {
+      "document_ref": "DOC-005",
+      "file_type": "html",
+      "chunk_count": 2,
+      "raw_title_sha256": "e57d285e2e5a09662f51fb9329d49cbcc84106730cb4a1a4bf55521940e7d0a3",
+      "raw_path_sha256": "450488078ffb2f8291a354bf21b1a5a45ba07e0dbe7a4b237570ce5dab5f5261"
+    },
+    {
+      "document_ref": "DOC-006",
+      "file_type": "html",
+      "chunk_count": 1,
+      "raw_title_sha256": "a8d3790633740ea7c0b1484618b4b61dd507e18fef643391b2f2a577215978da",
+      "raw_path_sha256": "fa5a49f764285d39cd2e452e2f2df95bf9d59d4710b13ce29ddc3c1c60209195"
+    },
+    {
+      "document_ref": "DOC-007",
+      "file_type": "md",
+      "chunk_count": 2,
+      "raw_title_sha256": "ea08d50e7c37f7e021f42d660f66eb20cf3e0a1d265110b9b67794d8d16fd348",
+      "raw_path_sha256": "f8ff55f597413daaf0e1440f38ba4833d90eb7e7b6dd3ebf8aec588b7001d30c"
+    },
+    {
+      "document_ref": "DOC-008",
+      "file_type": "md",
+      "chunk_count": 2,
+      "raw_title_sha256": "7eb906ed537784823d9abd1d019137f814eb314fa6f6e50bfec13c6982b37252",
+      "raw_path_sha256": "f5ea6999224b601758898e51fb3f9594de4ff37835fbab1c71e59d3fb81a24cc"
+    },
+    {
+      "document_ref": "DOC-009",
+      "file_type": "pptx",
+      "chunk_count": 1,
+      "raw_title_sha256": "2aca6d01d8fe454b913ffea83547e25057e63e91311dcc33ab57dc2bb9073021",
+      "raw_path_sha256": "204bcceaeba8a2ac90fd77d8b3f94e393e32c0c973099951a6405968b5910471"
+    },
+    {
+      "document_ref": "DOC-010",
+      "file_type": "pptx",
+      "chunk_count": 1,
+      "raw_title_sha256": "70e915e4b4807623921aa898646533e4f86df4d7a81767b57aeb912d6acfdaae",
+      "raw_path_sha256": "744ac830a1553b975ece88ab0cd2b40b561e31595c98b23f55b2b4870e8bad58"
+    }
+  ],
+  "chunks": [
+    {
+      "chunk_ref": "DOC-001-C000",
+      "document_ref": "DOC-001",
+      "raw_char_count": 342,
+      "raw_sha256": "25fbdba9adc8fca8495e2a57eb435e2f5f6c90476318962d52e9767349a38560",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 101
+    },
+    {
+      "chunk_ref": "DOC-002-C000",
+      "document_ref": "DOC-002",
+      "raw_char_count": 676,
+      "raw_sha256": "f64eaa45e51e0f74634359aa39563b635c70725938f448997f19bb258b9e4de4",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 146
+    },
+    {
+      "chunk_ref": "DOC-003-C000",
+      "document_ref": "DOC-003",
+      "raw_char_count": 607,
+      "raw_sha256": "2a67bc4d634977ded85765e0b0b6bd1089c3fb0dbbb8ae6ea8b78ce8b7c54396",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 81
+    },
+    {
+      "chunk_ref": "DOC-004-C000",
+      "document_ref": "DOC-004",
+      "raw_char_count": 531,
+      "raw_sha256": "fb717b5ced09d831b84ccbb2ca36acd775e0a4e42f876b73c483cca475f8ce9f",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 81
+    },
+    {
+      "chunk_ref": "DOC-005-C000",
+      "document_ref": "DOC-005",
+      "raw_char_count": 800,
+      "raw_sha256": "ddaa3f048f397d32354d63ab5f992446852eb4f118d2d212cdff321ec8d7e3d8",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 229
+    },
+    {
+      "chunk_ref": "DOC-005-C001",
+      "document_ref": "DOC-005",
+      "raw_char_count": 456,
+      "raw_sha256": "89dba12de147bf15862a5bbe8409bd3c555268b5390b33d4e20b1154dff1b10a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 111
+    },
+    {
+      "chunk_ref": "DOC-006-C000",
+      "document_ref": "DOC-006",
+      "raw_char_count": 741,
+      "raw_sha256": "0b020582825c7573e193c6c2a02113fd3cc89106fe785da45e85726777df1abb",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 179
+    },
+    {
+      "chunk_ref": "DOC-007-C000",
+      "document_ref": "DOC-007",
+      "raw_char_count": 800,
+      "raw_sha256": "ddde054a2868dc02afe6a401ca7b11e42ea7bf5bfb1e53e5e7ee4bc8035eaa54",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 189
+    },
+    {
+      "chunk_ref": "DOC-007-C001",
+      "document_ref": "DOC-007",
+      "raw_char_count": 318,
+      "raw_sha256": "1f8c1e5a8f2496a20aabd770f7c86ac23cfeadd16647b03976df45f0a71603cd",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 68
+    },
+    {
+      "chunk_ref": "DOC-008-C000",
+      "document_ref": "DOC-008",
+      "raw_char_count": 799,
+      "raw_sha256": "0272a99a1e2b1c0b5146792454019a958c67f09765c422f7d43d07bfc758648f",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 159
+    },
+    {
+      "chunk_ref": "DOC-008-C001",
+      "document_ref": "DOC-008",
+      "raw_char_count": 410,
+      "raw_sha256": "5d242476dc1b2d5cdb6aab792e0b8597e6484021adbf5a9e51b63d1349005173",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 95
+    },
+    {
+      "chunk_ref": "DOC-009-C000",
+      "document_ref": "DOC-009",
+      "raw_char_count": 593,
+      "raw_sha256": "aceb6b58935ca1522fd53788cce20859536833ffd00b1068c3d4b30c1ac6ec31",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 107
+    },
+    {
+      "chunk_ref": "DOC-010-C000",
+      "document_ref": "DOC-010",
+      "raw_char_count": 569,
+      "raw_sha256": "bcbf7066995e4499015ab8fb15121f2f588893993994ef9b887dc34bce93bdf6",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 125
+    }
+  ]
+}

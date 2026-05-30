@@ -1,0 +1,17 @@
+[
+  {
+    "question": "CAN通信異常時の確認項目は？",
+    "expected_sources": ["can_troubleshooting.md"],
+    "expected_terms": ["終端抵抗", "配線", "ボーレート"]
+  },
+  {
+    "question": "ECU接続手順を教えて",
+    "expected_sources": ["ecu_connection.md"],
+    "expected_terms": ["主電源", "CAN 配線", "通信状態"]
+  },
+  {
+    "question": "dSPACE起動エラーの対処方法は？",
+    "expected_sources": ["dspace_startup_error.md"],
+    "expected_terms": ["ライセンス", "キャッシュ", "設定ファイル"]
+  }
+]

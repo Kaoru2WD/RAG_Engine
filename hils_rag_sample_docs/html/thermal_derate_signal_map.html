@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Thermal Derate Signal Map</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 32px; color: #111827; line-height: 1.5; }
+    h1, h2 { color: #0f172a; }
+    .banner { background: #e0f2fe; border: 1px solid #7dd3fc; padding: 16px 18px; border-radius: 6px; }
+    .grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: start; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 22px; }
+    th, td { border: 1px solid #d1d5db; padding: 9px 10px; }
+    th { background: #f3f4f6; }
+    .mono { font-family: Consolas, monospace; background: #f3f4f6; border-radius: 6px; padding: 12px; white-space: pre-wrap; }
+    img { width: 100%; max-width: 640px; }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <strong>Intent:</strong> 熱デレート判定に使う信号群を、由来・更新周期・判定閾値・ありがちな誤解まで含めてまとめる。
+  </div>
+  <h1>Thermal Derate Signal Map</h1>
+  <div class="grid">
+    <div>
+      <h2>Signal Matrix</h2>
+      <table>
+        <tr><th>Signal</th><th>Source</th><th>Rate</th><th>Trip / Release</th><th>Notes</th></tr>
+        <tr><td>MCU_StatorTempFilt</td><td>Plant thermal model</td><td>10 ms</td><td>160 / 150 degC</td><td>一次遅れ後の値。raw temp と混同しやすい。</td></tr>
+        <tr><td>INV_CoolantTemp</td><td>Sensor stub</td><td>20 ms</td><td>65 / 60 degC</td><td>通信欠落時は last-good-hold。</td></tr>
+        <tr><td>DerateRequestLevel</td><td>Control SW</td><td>10 ms</td><td>0-3 state</td><td>レベル3で torque hard cap。</td></tr>
+      </table>
+      <h2>Expected Narrative</h2>
+      <p>通常は MCU_StatorTempFilt が先に立ち上がり、その後 INV_CoolantTemp が追従する。両者が同時に跳ねる場合、plant 初期条件かセンサスケーリングの疑いが強い。</p>
+      <div class="mono">Case A:
+- stator temp crosses 160 degC for 280 ms
+- derate level rises 0 -> 1 -> 2
+- torque limit ramps 280 -> 220 -> 180 Nm</div>
+    </div>
+    <div>
+      <h2>Flow View</h2>
+      <img src="../assets/fault_injection_flow.svg" alt="fault flow">
+      <h2>Review Questions</h2>
+      <ul>
+        <li>閾値は raw 値か filtered 値か。</li>
+        <li>解除条件に hysteresis があるか。</li>
+        <li>DerateRequestLevel と torque cap の関係は単調か。</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

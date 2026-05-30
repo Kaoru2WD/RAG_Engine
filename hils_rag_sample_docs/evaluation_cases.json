@@ -1,0 +1,46 @@
+[
+  {
+    "question": "CAN fault injection の手順を見たい",
+    "expected_source_labels": ["docx\\can_fault_injection_quick_guide.docx"]
+  },
+  {
+    "question": "DC charging bringup procedure を確認したい",
+    "expected_source_labels": ["docx\\hils_dc_charging_bringup_procedure.docx"]
+  },
+  {
+    "question": "inverter boot sequence のチェックリストは？",
+    "expected_source_labels": ["html\\inverter_boot_sequence_checklist.html"]
+  },
+  {
+    "question": "diag session recovery のプレイブックを見たい",
+    "expected_source_labels": ["md\\ecu_diag_session_recovery_playbook.md"]
+  },
+  {
+    "question": "regenerative brake の test report は？",
+    "expected_source_labels": ["pptx\\regenerative_brake_hils_test_report.pptx"]
+  },
+  {
+    "question": "inverter startup checklist を見たい",
+    "expected_source_labels": ["html\\inverter_boot_sequence_checklist.html"]
+  },
+  {
+    "question": "インバータの起動手順はどこ？",
+    "expected_source_labels": ["html\\inverter_boot_sequence_checklist.html"]
+  },
+  {
+    "question": "bench bringup の立ち上げ方法を確認したい",
+    "expected_source_labels": ["docx\\hils_dc_charging_bringup_procedure.docx", "pptx\\hils_bench_bringup_review.pptx"]
+  },
+  {
+    "question": "diag recovery procedure を見たい",
+    "expected_source_labels": ["md\\ecu_diag_session_recovery_playbook.md"]
+  },
+  {
+    "question": "fault injection recovery playbook はある？",
+    "expected_source_labels": ["docx\\can_fault_injection_quick_guide.docx", "md\\ecu_diag_session_recovery_playbook.md"]
+  },
+  {
+    "question": "thermal derate の signal map / チェック項目を見たい",
+    "expected_source_labels": ["html\\thermal_derate_signal_map.html"]
+  }
+]

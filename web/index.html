@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HILS Procedure Search</title>
+  <style>
+    :root {
+      --bg: #f5f7f8;
+      --panel: #ffffff;
+      --line: #d8e0e4;
+      --text: #18313d;
+      --muted: #5f7681;
+      --accent: #0f8b8d;
+      --accent-soft: #e7f6f6;
+      --ok: #1f7a1f;
+      --warn: #8a5a00;
+      --mono: "Consolas", "IBM Plex Mono", monospace;
+      --sans: "Segoe UI", "Hiragino Sans", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--text); }
+    .page { width: min(1120px, calc(100vw - 24px)); margin: 20px auto 28px; }
+    .panel { background: var(--panel); border: 1px solid var(--line); }
+    .hero, .controls, .tab-panel, .prompt-box, .catalog { padding: 16px; margin-bottom: 14px; }
+    h1, h2, h3 { margin: 0 0 10px; font-weight: 700; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 16px; }
+    p { margin: 0; line-height: 1.7; color: var(--muted); }
+    .meta-row, .operator-list, .catalog-list, .tab-strip, .detail-actions, .eval-row {
+      margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .chip {
+      padding: 6px 10px; background: var(--accent-soft); color: var(--accent);
+      border: 1px solid #c5e8e8; font-size: 12px; font-family: var(--mono);
+    }
+    .chip.ok { color: var(--ok); border-color: #bfe3bf; background: #eef9ee; }
+    .chip.warn { color: var(--warn); border-color: #f2ddb2; background: #fff8e8; }
+    .tab-button, button, .open-link {
+      padding: 10px 14px; border: 1px solid var(--accent); background: var(--accent); color: #fff;
+      cursor: pointer; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .tab-button.secondary, button.secondary, .open-link.secondary { background: #fff; color: var(--accent); }
+    .tab-button.active { background: var(--accent); color: #fff; }
+    .query-row { display: grid; grid-template-columns: 1fr 220px auto auto; gap: 10px; margin-bottom: 10px; }
+    .eval-grid { display: grid; grid-template-columns: 1fr 320px; gap: 10px; margin-top: 10px; }
+    input[type="search"], textarea, select {
+      width: 100%; padding: 12px 14px; border: 1px solid var(--line); font: inherit; color: var(--text); background: #fff;
+    }
+    .status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 14px; }
+    .result-list, .source-list, .benchmark-list { display: grid; gap: 10px; }
+    .result-item, .source-item, .benchmark-item { padding: 14px; border: 1px solid var(--line); }
+    .result-item { cursor: pointer; }
+    .result-item.active { border-color: var(--accent); background: var(--accent-soft); }
+    .result-head, .source-head, .benchmark-head {
+      display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+    }
+    .result-title, .source-title { font-weight: 700; }
+    .result-score, .result-meta, .detail-meta, .prompt-help, .source-meta, .benchmark-meta {
+      font-family: var(--mono); font-size: 12px; color: var(--muted);
+    }
+    .result-snippet, .detail-text { white-space: pre-wrap; line-height: 1.75; }
+    .detail-text { margin-top: 10px; padding: 12px; background: #f8fbfc; border: 1px solid var(--line); }
+    .detail-meta { display: grid; gap: 6px; }
+    .empty { color: var(--muted); line-height: 1.7; }
+    mark { background: #fff2c2; color: inherit; padding: 0 2px; }
+    textarea { min-height: 180px; resize: vertical; font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+    @media (max-width: 900px) {
+      .layout, .query-row, .eval-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="panel hero">
+      <h1>HILS 手順書検索デモ</h1>
+      <p>共通 UI のまま `Inline BM25` `Local Vector` `Hybrid Server` を切り替える。Top1 判定と elapsed seconds を UI 上で確認できる。</p>
+      <div class="meta-row" id="metrics"></div>
+    </section>
+
+    <section class="panel controls">
+      <div class="tab-strip">
+        <button class="tab-button active" data-tab="searchTab">Search</button>
+        <button class="tab-button secondary" data-tab="sourcesTab">Sources</button>
+        <button class="tab-button secondary" data-tab="benchmarkTab">Benchmark</button>
+      </div>
+      <div class="query-row">
+        <input id="queryInput" type="search" placeholder='例: +CAN通信 "確認項目" -旧版 source:can'>
+        <select id="engineSelect">
+          <option value="inline_bm25">Inline BM25</option>
+          <option value="vector_server">Local Vector</option>
+          <option value="hybrid_server">Hybrid Server</option>
+        </select>
+        <button id="searchButton">検索</button>
+        <button id="copyPromptButton" class="secondary">Copilot/Gemini用コピー</button>
+      </div>
+      <div class="eval-grid">
+        <select id="expectedSourceSelect"></select>
+        <div class="eval-row" id="searchEvalRow"></div>
+      </div>
+      <div class="status" id="statusLine">Index loading...</div>
+      <div class="operator-list" id="operatorHelp"></div>
+    </section>
+
+    <section id="searchTab" class="panel tab-panel active">
+      <div class="layout">
+        <section>
+          <h2>検索結果</h2>
+          <div class="result-list" id="resultList"></div>
+        </section>
+        <aside>
+          <section class="detail">
+            <h2>根拠チャンク</h2>
+            <div id="detailsPane" class="empty">検索結果を選ぶと、ここに根拠を表示する。</div>
+          </section>
+          <section class="catalog">
+            <h2>プレースホルダ凡例</h2>
+            <div class="catalog-list" id="placeholderCatalog"></div>
+          </section>
+          <section class="prompt-box">
+            <h2>外部LLMへ渡すプロンプト</h2>
+            <div class="prompt-help">検索モードを含めた根拠を Copilot / Gemini へ渡す。</div>
+            <textarea id="llmPrompt" readonly></textarea>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section id="sourcesTab" class="panel tab-panel">
+      <h2>チャンク化ソース一覧</h2>
+      <p>どの文書を索引化したか、件数と参照リンク付きで一覧化する。</p>
+      <div class="source-list" id="sourceList"></div>
+    </section>
+
+    <section id="benchmarkTab" class="panel tab-panel">
+      <div class="benchmark-head">
+        <div>
+          <h2>検索ベンチマーク</h2>
+          <p>評価ケースごとに Top1 が意図した文書へ着地するか、応答時間が何秒かを確認する。</p>
+        </div>
+        <button id="runBenchmarkButton">Run Benchmark</button>
+      </div>
+      <div class="eval-row" id="benchmarkSummary"></div>
+      <div class="benchmark-list" id="benchmarkList"></div>
+    </section>
+  </main>
+
+  <script src="/ui-assets/search-data.js"></script>
+  <script>
+    const searchData = window.SEARCH_DATA || { meta: {}, documents: [], chunks: [] };
+    const queryInput = document.getElementById("queryInput");
+    const engineSelect = document.getElementById("engineSelect");
+    const expectedSourceSelect = document.getElementById("expectedSourceSelect");
+    const searchButton = document.getElementById("searchButton");
+    const copyPromptButton = document.getElementById("copyPromptButton");
+    const runBenchmarkButton = document.getElementById("runBenchmarkButton");
+    const resultList = document.getElementById("resultList");
+    const detailsPane = document.getElementById("detailsPane");
+    const statusLine = document.getElementById("statusLine");
+    const metrics = document.getElementById("metrics");
+    const operatorHelp = document.getElementById("operatorHelp");
+    const placeholderCatalog = document.getElementById("placeholderCatalog");
+    const llmPrompt = document.getElementById("llmPrompt");
+    const sourceList = document.getElementById("sourceList");
+    const searchEvalRow = document.getElementById("searchEvalRow");
+    const benchmarkSummary = document.getElementById("benchmarkSummary");
+    const benchmarkList = document.getElementById("benchmarkList");
+
+    const JAPANESE_STOPWORDS = new Set(["は","が","を","に","で","と","へ","も","や","の","か","ね","よ","ぞ","さ","な","わ","だけ","まで","より","ほど","など","について","として"]);
+    const TOKEN_PATTERN = /[A-Za-z0-9_]+|[一-龯]+|[ァ-ヴー]+|[ぁ-ゖ]+/g;
+    const index = buildIndex(searchData.chunks);
+
+    function extractSearchTerms(text) {
+      const terms = [];
+      const matches = text.match(TOKEN_PATTERN) || [];
+      for (const rawToken of matches) {
+        const token = rawToken.toLowerCase();
+        if (isHiraganaOnly(token)) {
+          if (JAPANESE_STOPWORDS.has(token) || token.length === 1) continue;
+          terms.push(token);
+          continue;
+        }
+        terms.push(token);
+        if (token.length >= 2 && !/^[a-z0-9_]+$/.test(token)) {
+          for (let i = 0; i < token.length - 1; i += 1) terms.push(token.slice(i, i + 2));
+        }
+      }
+      return terms;
+    }
+
+    function isHiraganaOnly(text) {
+      return Array.from(text).every((char) => {
+        const code = char.codePointAt(0);
+        return code >= 0x3040 && code <= 0x309f;
+      });
+    }
+
+    function parseSearchQuery(rawQuery) {
+      const filters = {};
+      const phrases = [];
+      const includeTerms = [];
+      const optionalTerms = [];
+      const excludeTerms = [];
+
+      let working = rawQuery;
+      for (const match of rawQuery.matchAll(/"([^"]+)"/g)) phrases.push(match[1]);
+      working = working.replace(/"([^"]+)"/g, " ");
+
+      for (const match of working.matchAll(/(source|title|tag):(\S+)/g)) {
+        const key = match[1];
+        filters[key] = filters[key] || [];
+        filters[key].push(match[2].toLowerCase());
+      }
+      working = working.replace(/(source|title|tag):(\S+)/g, " ");
+
+      for (const part of working.split(/\s+/).filter(Boolean)) {
+        let bucket = optionalTerms;
+        let target = part;
+        if (part.startsWith("+") && part.length > 1) {
+          bucket = includeTerms;
+          target = part.slice(1);
+        } else if (part.startsWith("-") && part.length > 1) {
+          bucket = excludeTerms;
+          target = part.slice(1);
+        }
+        bucket.push(...extractSearchTerms(target));
+      }
+      return { rawQuery, filters, phrases, includeTerms, optionalTerms, excludeTerms };
+    }
+
+    function buildIndex(chunks) {
+      const documentCount = chunks.length;
+      const averageLength = chunks.reduce((sum, chunk) => sum + (chunk.token_count || 0), 0) / Math.max(documentCount, 1);
+      const documentFrequencies = new Map();
+      for (const chunk of chunks) {
+        const seen = new Set(chunk.tokens);
+        for (const token of seen) documentFrequencies.set(token, (documentFrequencies.get(token) || 0) + 1);
+      }
+      return { documentCount, averageLength, documentFrequencies };
+    }
+
+    function searchInline(rawQuery) {
+      const parsed = parseSearchQuery(rawQuery);
+      const scoringTerms = [...parsed.includeTerms, ...parsed.optionalTerms, ...parsed.phrases.flatMap(extractSearchTerms)];
+      if (!scoringTerms.length && !Object.keys(parsed.filters).length) return [];
+
+      const k1 = 1.5;
+      const b = 0.75;
+      const scored = [];
+
+      for (const chunk of searchData.chunks) {
+        const frequencies = new Map();
+        for (const token of chunk.tokens) frequencies.set(token, (frequencies.get(token) || 0) + 1);
+
+        if (!passesFilters(chunk, parsed.filters)) continue;
+        if (!parsed.includeTerms.every((term) => frequencies.has(term))) continue;
+        if (parsed.excludeTerms.some((term) => frequencies.has(term) || (chunk.text || "").includes(term))) continue;
+        if (!parsed.phrases.every((phrase) => (chunk.text || "").includes(phrase))) continue;
+
+        let score = 0;
+        for (const term of scoringTerms) {
+          const tf = frequencies.get(term) || 0;
+          if (!tf) continue;
+          const df = index.documentFrequencies.get(term) || 0;
+          const idf = Math.log(1 + ((index.documentCount - df + 0.5) / (df + 0.5)));
+          const length = chunk.token_count || 1;
+          const numerator = tf * (k1 + 1);
+          const denominator = tf + k1 * (1 - b + b * (length / Math.max(index.averageLength, 1)));
+          score += idf * (numerator / denominator);
+        }
+
+        scored.push({ ...chunk, score, matchedTerms: scoringTerms.filter((term) => frequencies.has(term)) });
+      }
+      return scored.sort((left, right) => right.score - left.score).slice(0, 8);
+    }
+
+    async function searchHybrid(rawQuery) {
+      const response = await fetch("/query/hybrid", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: rawQuery, top_k: 8, engine: "hybrid_server" })
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.detail || `Hybrid request failed: ${response.status}`);
+      }
+      const payload = await response.json();
+      return payload.hits || [];
+    }
+
+    async function searchVector(rawQuery) {
+      const response = await fetch("/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: rawQuery, top_k: 8, engine: "vector" })
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        throw new Error(payload.detail || `Vector request failed: ${response.status}`);
+      }
+      const payload = await response.json();
+      return payload.hits || [];
+    }
+
+    function passesFilters(chunk, filters) {
+      const sourceTerms = filters.source || [];
+      const titleTerms = filters.title || [];
+      if (sourceTerms.length && !sourceTerms.every((term) => (chunk.source_label || "").toLowerCase().includes(term))) return false;
+      if (titleTerms.length && !titleTerms.every((term) => (chunk.title || "").toLowerCase().includes(term))) return false;
+      return true;
+    }
+
+    function evaluateTop1(results, expectedSourceLabel) {
+      if (!expectedSourceLabel) return { hasExpectation: false, pass: null };
+      const topLabel = results[0]?.source_label || "";
+      return {
+        hasExpectation: true,
+        pass: topLabel === expectedSourceLabel,
+        expectedSourceLabel,
+        actualSourceLabel: topLabel || "(none)"
+      };
+    }
+
+    function renderSearchEvaluation(elapsedSeconds, evaluation) {
+      const chips = [chip(`elapsed ${elapsedSeconds.toFixed(3)} sec`)];
+      if (evaluation.hasExpectation) {
+        chips.push(
+          evaluation.pass
+            ? chip(`Top1 PASS ${evaluation.actualSourceLabel}`, "ok")
+            : chip(`Top1 FAIL expected=${evaluation.expectedSourceLabel} actual=${evaluation.actualSourceLabel}`, "warn")
+        );
+      } else {
+        chips.push(chip("Top1 check skipped", "warn"));
+      }
+      searchEvalRow.innerHTML = chips.join("");
+    }
+
+    function renderResults(results, query, elapsedSeconds, evaluation) {
+      renderSearchEvaluation(elapsedSeconds, evaluation);
+      if (!results.length) {
+        resultList.innerHTML = `<div class="empty">一致候補なし。条件が強すぎるか、サーバー未接続だ。</div>`;
+        detailsPane.innerHTML = `<div class="empty">根拠チャンクなし。</div>`;
+        llmPrompt.value = buildPrompt(query, [], null, engineSelect.value);
+        statusLine.textContent = `0 hits / ${elapsedSeconds.toFixed(3)} sec / engine=${engineSelect.value}`;
+        return;
+      }
+
+      statusLine.textContent = `${results.length} hits / ${elapsedSeconds.toFixed(3)} sec / engine=${engineSelect.value}`;
+      resultList.innerHTML = results.map((result, index) => `
+        <article class="result-item ${index === 0 ? "active" : ""}" data-result-id="${result.id ?? result.chunk_id ?? index}">
+          <div class="result-head">
+            <div class="result-title">${escapeHtml(result.title)}</div>
+            <div class="result-score">${escapeHtml(engineSelect.value)} ${Number(result.score || 0).toFixed(3)}</div>
+          </div>
+          <div class="result-meta">${escapeHtml(result.document_ref || "DOC-EXT")} / ${escapeHtml(result.source_label || "(unknown)")} / chunk ${escapeHtml(result.chunk_index ?? 0)}</div>
+          <div class="detail-actions">
+            ${result.source_url ? `<a class="open-link secondary" href="${escapeAttribute(result.source_url)}" target="_blank" rel="noopener noreferrer">元ドキュメントを開く</a>` : ""}
+          </div>
+          <div class="result-snippet">${highlight(escapeHtml(snippet(result.text || "")), result.matchedTerms || extractSearchTerms(query))}</div>
+        </article>
+      `).join("");
+
+      llmPrompt.value = buildPrompt(query, results, null, engineSelect.value);
+      renderDetail(results[0], query);
+      bindResultSelection(results, query);
+    }
+
+    function bindResultSelection(results, query) {
+      for (const node of resultList.querySelectorAll(".result-item")) {
+        node.addEventListener("click", (event) => {
+          if (event.target.closest(".open-link")) return;
+          for (const item of resultList.querySelectorAll(".result-item")) item.classList.remove("active");
+          node.classList.add("active");
+          const selected = results.find((row, index) => String(row.id ?? row.chunk_id ?? index) === node.dataset.resultId);
+          if (selected) {
+            renderDetail(selected, query);
+            llmPrompt.value = buildPrompt(query, results, selected.id ?? selected.chunk_id ?? null, engineSelect.value);
+          }
+        });
+      }
+    }
+
+    function renderDetail(result, query) {
+      const placeholderKeys = (result.placeholder_keys || []).join(", ") || "(none)";
+      const matchedTerms = result.matchedTerms || extractSearchTerms(query);
+      detailsPane.innerHTML = `
+        <div class="detail-meta">document_ref: ${escapeHtml(result.document_ref || "DOC-EXT")}</div>
+        <div class="detail-meta">source_label: ${escapeHtml(result.source_label || "(unknown)")}</div>
+        <div class="detail-meta">matched_terms: ${escapeHtml((matchedTerms || []).join(", ") || "(none)")}</div>
+        <div class="detail-meta">placeholder_keys: ${escapeHtml(placeholderKeys)}</div>
+        <div class="detail-actions">
+          ${result.source_url ? `<a class="open-link secondary" href="${escapeAttribute(result.source_url)}" target="_blank" rel="noopener noreferrer">元ドキュメントを開く</a>` : ""}
+        </div>
+        <div class="detail-text">${highlight(escapeHtml(result.text || ""), matchedTerms)}</div>
+      `;
+    }
+
+    function renderSourceList() {
+      if (!searchData.documents.length) {
+        sourceList.innerHTML = `<div class="empty">索引化されたソースなし。</div>`;
+        return;
+      }
+      sourceList.innerHTML = searchData.documents.map((document) => `
+        <article class="source-item">
+          <div class="source-head">
+            <div class="source-title">${escapeHtml(document.title)}</div>
+            <a class="open-link secondary" href="${escapeAttribute(document.source_url)}" target="_blank" rel="noopener noreferrer">開く</a>
+          </div>
+          <div class="source-meta">${escapeHtml(document.document_ref)} / ${escapeHtml(document.source_label)} / ${escapeHtml(document.file_type.toUpperCase())} / chunks ${document.chunk_count}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderExpectedSourceSelect() {
+      const options = ['<option value="">Top1 判定なし</option>']
+        .concat(searchData.documents.map((document) => `<option value="${escapeAttribute(document.source_label)}">${escapeHtml(document.source_label)}</option>`));
+      expectedSourceSelect.innerHTML = options.join("");
+    }
+
+    async function searchInternal(query) {
+      const started = performance.now();
+      const results = engineSelect.value === "hybrid_server"
+        ? await searchHybrid(query)
+        : engineSelect.value === "vector_server"
+          ? await searchVector(query)
+          : searchInline(query);
+      const elapsedSeconds = (performance.now() - started) / 1000;
+      const evaluation = evaluateTop1(results, expectedSourceSelect.value);
+      return { results, elapsedSeconds, evaluation };
+    }
+
+    function buildPrompt(query, results, focusId = null, engine = "inline_bm25") {
+      const lines = [
+        "以下は HILS 手順書検索の結果です。検索結果を根拠にして、日本語で簡潔に回答してください。",
+        "不足している点は推測せず、『追加確認が必要』と明記してください。",
+        `検索エンジン: ${engine}`,
+        "",
+        `質問: ${query}`,
+        ""
+      ];
+
+      const selectedResults = results.slice(0, 3).filter((row, index) => {
+        const rowId = row.id ?? row.chunk_id ?? index;
+        return focusId === null || rowId === focusId || (results[0] && (results[0].id ?? results[0].chunk_id ?? 0) === rowId);
+      });
+      for (const result of selectedResults) {
+        lines.push(`[${result.document_ref || "DOC-EXT"} / score=${Number(result.score || 0).toFixed(3)}] ${result.title || "(untitled)"}`);
+        lines.push(`source: ${result.source_label || "(unknown)"}`);
+        if (result.source_url) lines.push(`url: ${result.source_url}`);
+        lines.push(`text: ${result.text || ""}`);
+        if ((result.placeholder_keys || []).length) lines.push(`placeholder_keys: ${result.placeholder_keys.join(", ")}`);
+        lines.push("");
+      }
+
+      lines.push("回答ルール:");
+      lines.push("- まず結論");
+      lines.push("- 次に確認項目を箇条書き");
+      lines.push("- 最後に参照した document_ref を列挙");
+      return lines.join("\n");
+    }
+
+    function renderMetrics() {
+      metrics.innerHTML = [
+        chip(`docs ${searchData.meta.document_count || 0}`),
+        chip(`chunks ${searchData.meta.chunk_count || 0}`),
+        chip(`chunk ${searchData.meta.chunk_size || "-"} / overlap ${searchData.meta.chunk_overlap || "-"}`)
+      ].join("");
+    }
+
+    function renderOperatorHelp() {
+      const engineChips = [
+        { syntax: "inline_bm25", meaning: "HTML 内 BM25" },
+        { syntax: "vector_server", meaning: "local vector DB" },
+        { syntax: "hybrid_server", meaning: "GPU/ollama 側検索" }
+      ];
+      operatorHelp.innerHTML = [
+        ...engineChips.map((row) => chip(`${row.syntax} = ${row.meaning}`)),
+        ...(searchData.meta.operator_help || []).map((row) => chip(`${row.syntax} = ${row.meaning}`))
+      ].join("");
+    }
+
+    function renderPlaceholderCatalog() {
+      const catalog = searchData.meta.placeholder_catalog || [];
+      placeholderCatalog.innerHTML = catalog.length
+        ? catalog.map((row) => chip(`${row.key} -> ${row.placeholder}`)).join("")
+        : `<div class="empty">プレースホルダ規則なし。</div>`;
+    }
+
+    async function runSearch() {
+      const query = queryInput.value.trim();
+      if (!query) {
+        statusLine.textContent = "検索語を入力すること。";
+        return;
+      }
+      statusLine.textContent = `searching / engine=${engineSelect.value}`;
+      try {
+        const outcome = await searchInternal(query);
+        renderResults(outcome.results, query, outcome.elapsedSeconds, outcome.evaluation);
+      } catch (error) {
+        resultList.innerHTML = `<div class="empty">${escapeHtml(error.message || "search failed")}</div>`;
+        detailsPane.innerHTML = `<div class="empty">根拠チャンクなし。</div>`;
+        llmPrompt.value = buildPrompt(query, [], null, engineSelect.value);
+        searchEvalRow.innerHTML = chip("search failed", "warn");
+        statusLine.textContent = `search failed / engine=${engineSelect.value}`;
+      }
+    }
+
+    async function runBenchmark() {
+      const cases = searchData.meta.evaluation_cases || [];
+      if (!cases.length) {
+        benchmarkSummary.innerHTML = chip("評価ケースなし", "warn");
+        benchmarkList.innerHTML = `<div class="empty">evaluation_cases.json を追加すると一括確認できる。</div>`;
+        return;
+      }
+
+      benchmarkSummary.innerHTML = chip(`running ${cases.length} cases`);
+      const results = [];
+      for (const benchmarkCase of cases) {
+        const started = performance.now();
+        let hits = [];
+        let errorMessage = "";
+        try {
+          hits = engineSelect.value === "hybrid_server"
+            ? await searchHybrid(benchmarkCase.question)
+            : engineSelect.value === "vector_server"
+              ? await searchVector(benchmarkCase.question)
+              : searchInline(benchmarkCase.question);
+        } catch (error) {
+          errorMessage = error.message || "search failed";
+        }
+        const elapsedSeconds = (performance.now() - started) / 1000;
+        const topLabel = hits[0]?.source_label || "";
+        const pass = !errorMessage && (benchmarkCase.expected_source_labels || []).includes(topLabel);
+        results.push({ question: benchmarkCase.question, expected: benchmarkCase.expected_source_labels || [], actual: topLabel || "(none)", pass, elapsedSeconds, errorMessage });
+      }
+
+      const passed = results.filter((row) => row.pass).length;
+      benchmarkSummary.innerHTML = [
+        chip(`engine ${engineSelect.value}`),
+        chip(`pass ${passed}/${results.length}`, passed === results.length ? "ok" : "warn"),
+        chip(`avg ${average(results.map((row) => row.elapsedSeconds)).toFixed(3)} sec`)
+      ].join("");
+
+      benchmarkList.innerHTML = results.map((row) => `
+        <article class="benchmark-item">
+          <div class="benchmark-head">
+            <div>${escapeHtml(row.question)}</div>
+            <div class="chip ${row.pass ? "ok" : "warn"}">${row.pass ? "PASS" : "FAIL"}</div>
+          </div>
+          <div class="benchmark-meta">expected=${escapeHtml(row.expected.join(", ") || "(none)")} / actual=${escapeHtml(row.actual)} / elapsed=${row.elapsedSeconds.toFixed(3)} sec</div>
+          ${row.errorMessage ? `<div class="benchmark-meta">error=${escapeHtml(row.errorMessage)}</div>` : ""}
+        </article>
+      `).join("");
+    }
+
+    function average(values) {
+      return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+    }
+
+    function setupTabs() {
+      for (const button of document.querySelectorAll(".tab-button")) {
+        button.addEventListener("click", () => {
+          for (const tab of document.querySelectorAll(".tab-panel")) tab.classList.remove("active");
+          for (const other of document.querySelectorAll(".tab-button")) {
+            other.classList.remove("active");
+            other.classList.add("secondary");
+          }
+          document.getElementById(button.dataset.tab).classList.add("active");
+          button.classList.add("active");
+          button.classList.remove("secondary");
+        });
+      }
+    }
+
+    function chip(label, kind = "") {
+      return `<span class="chip ${kind}">${escapeHtml(label)}</span>`;
+    }
+
+    function highlight(text, terms) {
+      let output = text;
+      const uniqueTerms = [...new Set(terms)].sort((a, b) => b.length - a.length);
+      for (const term of uniqueTerms) {
+        if (term.length < 2) continue;
+        output = output.replaceAll(term, `<mark>${term}</mark>`);
+      }
+      return output;
+    }
+
+    function snippet(text, max = 160) {
+      return text.length > max ? `${text.slice(0, max)}...` : text;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function escapeAttribute(value) {
+      return String(value).replaceAll('"', "&quot;");
+    }
+
+    searchButton.addEventListener("click", () => { void runSearch(); });
+    runBenchmarkButton.addEventListener("click", () => { void runBenchmark(); });
+    queryInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") void runSearch();
+    });
+    engineSelect.addEventListener("change", () => {
+      statusLine.textContent = `engine switched / ${engineSelect.value}`;
+    });
+    copyPromptButton.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(llmPrompt.value);
+      statusLine.textContent = "Prompt copied for Copilot/Gemini.";
+    });
+
+    setupTabs();
+    renderMetrics();
+    renderOperatorHelp();
+    renderPlaceholderCatalog();
+    renderExpectedSourceSelect();
+    renderSourceList();
+    benchmarkSummary.innerHTML = chip(`cases ${(searchData.meta.evaluation_cases || []).length}`);
+    statusLine.textContent = `index ready / ${searchData.meta.document_count || 0} docs / ${searchData.meta.chunk_count || 0} chunks`;
+    queryInput.value = 'inverter boot sequence のチェックリストは？';
+    expectedSourceSelect.value = 'html\\inverter_boot_sequence_checklist.html';
+    void runSearch();
+  </script>
+</body>
+</html>

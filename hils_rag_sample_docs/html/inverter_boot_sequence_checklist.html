@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>HILS Inverter Boot Sequence Checklist</title>
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; color: #0f172a; background: #f8fafc; }
+    header { background: #0f172a; color: #fff; padding: 24px 40px; }
+    main { display: grid; grid-template-columns: 260px 1fr; gap: 28px; padding: 28px 40px 48px; }
+    nav { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 18px; position: sticky; top: 20px; height: fit-content; }
+    nav a { display: block; color: #1d4ed8; text-decoration: none; margin: 10px 0; }
+    section { background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 24px; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th, td { border: 1px solid #cbd5e1; padding: 10px 12px; vertical-align: top; }
+    th { background: #e2e8f0; text-align: left; }
+    code, pre { font-family: Consolas, monospace; background: #e2e8f0; }
+    pre { padding: 12px; overflow: auto; border-radius: 6px; }
+    .note { border-left: 4px solid #d97706; background: #fff7ed; padding: 12px 14px; }
+    img { width: 100%; max-width: 900px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>HILS Inverter Boot Sequence Checklist</h1>
+    <p>目的: インバータ ECU の起動手順を、前提条件・分岐条件・ログ確認点ごとに分割しやすい形で残す。</p>
+  </header>
+  <main>
+    <nav>
+      <strong>Sections</strong>
+      <a href="#scope">1. Scope</a>
+      <a href="#prereq">2. Preconditions</a>
+      <a href="#steps">3. Boot Steps</a>
+      <a href="#verify">4. Verification</a>
+      <a href="#rollback">5. Rollback</a>
+    </nav>
+    <div>
+      <section id="scope">
+        <h2>1. Scope</h2>
+        <p>対象ベンチは dSPACE SCALEXIO + バッテリシミュレータ + インバータプラント。対象 ECU は INV_MAIN、CANoe から起動コマンドを発行する。</p>
+        <img src="../assets/bench_topology.svg" alt="bench topology">
+      </section>
+      <section id="prereq">
+        <h2>2. Preconditions</h2>
+        <table>
+          <tr><th>項目</th><th>期待値</th><th>備考</th></tr>
+          <tr><td>12V supply</td><td>13.2 +/- 0.2 V</td><td>低いと precharge 前に brownout が出る</td></tr>
+          <tr><td>HV simulated bus</td><td>360 V standby</td><td>起動後 340 V を下回らないこと</td></tr>
+          <tr><td>CAN gateway</td><td>Node state = operational</td><td>起動直後 500 ms 以内に heartbeat を受信</td></tr>
+        </table>
+      </section>
+      <section id="steps">
+        <h2>3. Boot Steps</h2>
+        <ol>
+          <li>ベンチ電源投入。PSU と HIL ラックが Ready を返すまで待機。</li>
+          <li>CANoe configuration をロードし、VCU_IGN_CMD=1 を 100 ms 周期で送信。</li>
+          <li>INV_MAIN.State が <code>PRECHARGE</code> に遷移することを確認。</li>
+          <li>HV bus > 340 V を満たしたら TorqueEnableReq=1 を送る。</li>
+          <li>State=READY かつ DTC count=0 なら起動完了。</li>
+        </ol>
+        <div class="note">注: 手順 3 で 2 秒以上滞留した場合、FaultLatch より先に SupplyDip を疑う。</div>
+      </section>
+      <section id="verify">
+        <h2>4. Verification Cues</h2>
+<pre>[08:14:22.105] IGN_CMD=1
+[08:14:22.442] INV_MAIN.State=PRECHARGE
+[08:14:23.018] HVBus=347.6V
+[08:14:23.121] INV_MAIN.State=READY</pre>
+        <p>READY 遷移後 500 ms 以内に torque response dummy signal が 0 Nm を維持していること。振れがあるなら model side initial condition mismatch を切り分ける。</p>
+      </section>
+      <section id="rollback">
+        <h2>5. Rollback Path</h2>
+        <p>異常時は TorqueEnableReq=0 → IGN_CMD=0 → PSU output off の順で戻す。ログ採取が未完なら bench reset を先に打たない。</p>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

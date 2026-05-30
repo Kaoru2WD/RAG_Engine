@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+<rect width="1200" height="700" fill="#f7fafc"/>
+<text x="60" y="70" font-size="34" font-family="Segoe UI, Arial" font-weight="700" fill="#0f172a">Power Mode Transition Timeline</text>
+<line x1="100" y1="350" x2="1080" y2="350" stroke="#0f172a" stroke-width="6"/>
+<rect x="110" y="280" width="180" height="60" rx="8" fill="#dbeafe"/><text x="142" y="320" font-size="24" font-family="Segoe UI, Arial">KL15 ON</text>
+<rect x="340" y="220" width="220" height="120" rx="8" fill="#dcfce7"/><text x="365" y="285" font-size="24" font-family="Segoe UI, Arial">Precharge</text><text x="365" y="315" font-size="20" font-family="Segoe UI, Arial">HV bus > 340 V</text>
+<rect x="620" y="180" width="210" height="160" rx="8" fill="#fef3c7"/><text x="650" y="255" font-size="24" font-family="Segoe UI, Arial">Ready</text><text x="650" y="285" font-size="20" font-family="Segoe UI, Arial">Torque enable</text>
+<rect x="880" y="250" width="170" height="90" rx="8" fill="#fee2e2"/><text x="915" y="305" font-size="24" font-family="Segoe UI, Arial">Shutdown</text>
+</svg>

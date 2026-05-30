@@ -1,0 +1,19 @@
+{
+  "rules": [
+    {
+      "key": "ecu_name",
+      "placeholder": "{{ECU_NAME}}",
+      "values": ["EVCU-A", "MotorECU-X1"]
+    },
+    {
+      "key": "bench_name",
+      "placeholder": "{{BENCH_NAME}}",
+      "values": ["HILS-BENCH-01", "dSPACE-SIM-ALPHA"]
+    },
+    {
+      "key": "sharepoint_site",
+      "placeholder": "{{SP_SITE}}",
+      "values": ["SharePoint-Project-A", "EV-Validation-Docs"]
+    }
+  ]
+}

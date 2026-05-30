@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.pytest_tmp/
+*.pyc
+data/
+*.sqlite3
+.env
+placeholder_rules.local.json
+archive/
+web/*.log
