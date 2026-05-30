@@ -2,6 +2,7 @@
 __pycache__/
 .pytest_cache/
 .pytest_tmp/
+.pytest_tmp_exe*/
 *.pyc
 *.egg-info/
 data/
@@ -9,4 +10,7 @@ data/
 .env
 placeholder_rules.local.json
 archive/
+build/
+dist_runtime/
+dist/
 web/*.log

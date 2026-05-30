@@ -248,3 +248,39 @@ python -m rag_engine.evaluate
 - Embedding/VectorDB は差し替え可能だが、最初から主役にはしない
 
 詳細は [docs/architecture.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/architecture.md) を参照。
+
+## Exe 配布
+
+ローカルサーバを同梱起動する Windows 用ランチャー exe を作れる。今回は `onedir` を既定にしている。
+理由は、`source_url` から元文書を開く導線を壊しにくく、複数 RAG package 同居時の実体確認もしやすいため。
+
+### Build
+
+```powershell
+pip install -e .[build]
+$env:PYTHONPATH="src"
+python -m rag_engine.build_exe
+```
+
+生成先:
+
+- `dist/HILSRAGLauncher/HILSRAGLauncher.exe`
+
+### Launch
+
+```powershell
+dist\HILSRAGLauncher\HILSRAGLauncher.exe
+```
+
+初回起動では、ローカル `%LOCALAPPDATA%\RAGEngine\packages\hils-procedure-rag\data\` に
+BM25 / vector の索引が無ければ自動再構築する。
+
+保存先を固定したい場合は `RAG_ENGINE_STORAGE_ROOT` で上書きできる。
+
+### Smoke Test
+
+```powershell
+dist\HILSRAGLauncher\HILSRAGLauncher.exe --smoke-test --no-browser --port 8012
+```
+
+`/health` 到達まで確認して正常終了すれば、同梱サーバの初動は通っている。
