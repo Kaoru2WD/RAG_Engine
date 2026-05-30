@@ -6,29 +6,36 @@
 - UI: [web/index.html](/C:/Users/Kaoru/Documents/RAG_Engine/web/index.html)
 - main app: [src/rag_engine/main.py](/C:/Users/Kaoru/Documents/RAG_Engine/src/rag_engine/main.py)
 - service: [src/rag_engine/service.py](/C:/Users/Kaoru/Documents/RAG_Engine/src/rag_engine/service.py)
+- hybrid backend の既定値は `http://127.0.0.1:8000/backend/query`
+- vector 既定値は `title_source_text` / `800` / `100`
 
 ## Confirmed Behavior
 
 - fresh start で 3 系統とも起動と疎通は確認済み
 - query: `inverter boot sequence のチェックリストは？`
   - `Inline BM25` Top1: `html\inverter_boot_sequence_checklist.html`
-  - `Local Vector` Top1: `md\hils_power_mode_transition_notes.md`
-  - `Hybrid Server` Top1: `md\hils_power_mode_transition_notes.md`
+  - `Local Vector` は tuning 後に改善済み
+  - `Hybrid Server` は `/backend/query` 既定 backend で疎通済み
+- vector 評価ケースは 11 件
+- summary:
+  - BM25: Top1 `1.000` / Top3 `1.000`
+  - Vector `text_800`: Top1 `0.727` / Top3 `0.818`
+  - Vector `title_source_text_800`: Top1 `0.909` / Top3 `1.000`
+  - Vector `title_source_text_500`: Top1 `0.909` / Top3 `0.909`
 
 ## Open Tasks
 
-- CLI 側で `Hybrid backend` を本番相当 API 契約に合わせる
-- `hils_rag_sample_docs/evaluation_cases.json` に表記ゆれ比較ケースを追加
-- vector 側で以下を比較
-  - 本文のみ埋め込み
-  - `title + source_label + text` 埋め込み
-  - chunk size 縮小
+- 見出し単位 chunking と固定長 chunking の比較
+- `インバータの起動手順はどこ？` のような純日本語寄り query での vector 残差を詰める
+- Benchmark タブ上で BM25 / Local Vector / Hybrid を継続比較する
 
 ## Useful Files
 
 - [hils_rag_sample_docs/evaluation_cases.json](/C:/Users/Kaoru/Documents/RAG_Engine/hils_rag_sample_docs/evaluation_cases.json)
 - [README.md](/C:/Users/Kaoru/Documents/RAG_Engine/README.md)
 - [docs/runtime_ui.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/runtime_ui.md)
+- [docs/vector_hybrid_tuning_2026-05-30.md](/C:/Users/Kaoru/Documents/RAG_Engine/docs/vector_hybrid_tuning_2026-05-30.md)
+- [data/vector_eval_report.json](/C:/Users/Kaoru/Documents/RAG_Engine/data/vector_eval_report.json)
 
 ## Snapshot
 
