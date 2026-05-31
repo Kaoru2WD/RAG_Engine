@@ -61,6 +61,7 @@ class VectorIndexStore:
         document_text_mode: str,
         chunk_size: int,
         chunk_overlap: int,
+        chunk_strategy: str = "fixed",
     ) -> int:
         if not chunks:
             return 0
@@ -97,6 +98,7 @@ class VectorIndexStore:
                     ("document_text_mode", document_text_mode),
                     ("chunk_size", str(chunk_size)),
                     ("chunk_overlap", str(chunk_overlap)),
+                    ("chunk_strategy", chunk_strategy),
                     ("chunk_count", str(self.count_chunks(connection))),
                 ],
             )

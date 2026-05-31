@@ -21,13 +21,14 @@ class RagService:
         self.store = IndexStore(settings.database_path)
         self.vector_store = VectorIndexStore(settings.vector_database_path)
         self.embedding_provider = build_embedding_provider(settings)
-        self.indexer = Indexer(self.store, settings.chunk_size, settings.chunk_overlap)
+        self.indexer = Indexer(self.store, settings.chunk_size, settings.chunk_overlap, settings.chunk_strategy)
         self.vector_indexer = VectorIndexer(
             self.vector_store,
             self.embedding_provider,
             settings.vector_chunk_size,
             settings.vector_chunk_overlap,
             settings.vector_document_text_mode,
+            settings.vector_chunk_strategy,
         )
         self.retriever = Retriever(self.store)
         self.vector_retriever = VectorRetriever(self.vector_store, self.embedding_provider)

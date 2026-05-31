@@ -21,8 +21,10 @@ class Settings(BaseSettings):
     vector_database_path: Path = Field(default_factory=default_vector_database_path)
     chunk_size: int = 800
     chunk_overlap: int = 100
+    chunk_strategy: str = "fixed"
     vector_chunk_size: int = 800
     vector_chunk_overlap: int = 100
+    vector_chunk_strategy: str = "fixed"
     default_top_k: int = 3
     placeholder_rules_path: Path = Field(default_factory=default_placeholder_rules_path)
     dry_run_report_path: Path = Field(default_factory=default_dry_run_report_path)

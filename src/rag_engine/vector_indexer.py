@@ -15,12 +15,14 @@ class VectorIndexer:
         chunk_size: int,
         chunk_overlap: int,
         document_text_mode: str,
+        chunk_strategy: str = "fixed",
     ) -> None:
         self.store = store
         self.embedding_provider = embedding_provider
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.document_text_mode = document_text_mode
+        self.chunk_strategy = chunk_strategy
 
     def rebuild(self, documents_dir: Path) -> tuple[int, int, list[str], str, str]:
         self.store.reset()
@@ -33,7 +35,7 @@ class VectorIndexer:
         for path in discover_documents(documents_dir):
             try:
                 document = extract_document(path)
-                chunks = chunk_document(document, self.chunk_size, self.chunk_overlap)
+                chunks = chunk_document(document, self.chunk_size, self.chunk_overlap, strategy=self.chunk_strategy)
                 source_label = str(path.relative_to(documents_dir))
                 embedding_inputs = [
                     build_document_embedding_text(chunk, source_label=source_label, mode=self.document_text_mode)
@@ -50,6 +52,7 @@ class VectorIndexer:
                     document_text_mode=self.document_text_mode,
                     chunk_size=self.chunk_size,
                     chunk_overlap=self.chunk_overlap,
+                    chunk_strategy=self.chunk_strategy,
                 )
                 indexed_documents += 1
             except Exception as exc:  # noqa: BLE001

@@ -14,6 +14,7 @@ def main() -> None:
     parser.add_argument("--database-path", default=str(settings.vector_database_path))
     parser.add_argument("--chunk-size", type=int, default=settings.vector_chunk_size)
     parser.add_argument("--chunk-overlap", type=int, default=settings.vector_chunk_overlap)
+    parser.add_argument("--chunk-strategy", default=settings.vector_chunk_strategy)
     parser.add_argument("--document-text-mode", default=settings.vector_document_text_mode)
     args = parser.parse_args()
 
@@ -23,6 +24,7 @@ def main() -> None:
             "vector_database_path": Path(args.database_path),
             "vector_chunk_size": args.chunk_size,
             "vector_chunk_overlap": args.chunk_overlap,
+            "vector_chunk_strategy": args.chunk_strategy,
             "vector_document_text_mode": args.document_text_mode,
         }
     )
@@ -34,6 +36,7 @@ def main() -> None:
         vector_settings.vector_chunk_size,
         vector_settings.vector_chunk_overlap,
         vector_settings.vector_document_text_mode,
+        vector_settings.vector_chunk_strategy,
     )
     indexed_documents, indexed_chunks, skipped_files, provider_name, provider_detail = indexer.rebuild(
         vector_settings.documents_dir
@@ -48,6 +51,7 @@ def main() -> None:
         "document_text_mode": vector_settings.vector_document_text_mode,
         "chunk_size": vector_settings.vector_chunk_size,
         "chunk_overlap": vector_settings.vector_chunk_overlap,
+        "chunk_strategy": vector_settings.vector_chunk_strategy,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2))
 

@@ -26,6 +26,7 @@ def evaluate_cases(cases_path: Path) -> dict:
             "vector_document_text_mode": "text",
             "vector_chunk_size": 800,
             "vector_chunk_overlap": 100,
+            "vector_chunk_strategy": "fixed",
             "vector_database_path": Path("data/eval_vector_text_800.sqlite3"),
         },
         {
@@ -33,6 +34,7 @@ def evaluate_cases(cases_path: Path) -> dict:
             "vector_document_text_mode": "title_source_text",
             "vector_chunk_size": 800,
             "vector_chunk_overlap": 100,
+            "vector_chunk_strategy": "fixed",
             "vector_database_path": Path("data/eval_vector_title_source_text_800.sqlite3"),
         },
         {
@@ -40,7 +42,16 @@ def evaluate_cases(cases_path: Path) -> dict:
             "vector_document_text_mode": "title_source_text",
             "vector_chunk_size": 500,
             "vector_chunk_overlap": 80,
+            "vector_chunk_strategy": "fixed",
             "vector_database_path": Path("data/eval_vector_title_source_text_500.sqlite3"),
+        },
+        {
+            "name": "title_source_text_heading",
+            "vector_document_text_mode": "title_source_text",
+            "vector_chunk_size": 800,
+            "vector_chunk_overlap": 100,
+            "vector_chunk_strategy": "heading",
+            "vector_database_path": Path("data/eval_vector_title_source_text_heading.sqlite3"),
         },
     ]
 

@@ -22,11 +22,14 @@
   - Vector `text_800`: Top1 `0.727` / Top3 `0.818`
   - Vector `title_source_text_800`: Top1 `0.909` / Top3 `1.000`
   - Vector `title_source_text_500`: Top1 `0.909` / Top3 `0.909`
+  - Vector `title_source_text_heading`: Top1 `0.909` / Top3 `0.909`
 
 ## Open Tasks
 
-- 見出し単位 chunking と固定長 chunking の比較
+- 見出し単位 chunking の一次比較は実施済み
+- `title_source_text_heading` は `title_source_text_800` を上回らなかった
 - `インバータの起動手順はどこ？` のような純日本語寄り query での vector 残差を詰める
+- 次候補は見出し分割より、query-side expansion / 同義語辞書 / 日本語寄りメタデータ付与
 - Benchmark タブ上で BM25 / Local Vector / Hybrid を継続比較する
 
 ## Useful Files
