@@ -23,10 +23,12 @@ def test_build_manifest_hashes_files(tmp_path: Path) -> None:
         engine_modes=["inline_bm25", "vector"],
         source="Kaoru2WD/RAG_Engine",
         release_notes=["note"],
+        forms_request_url="https://example.com/forms/request",
     )
 
     assert manifest.package_hash.startswith("sha256:")
     assert manifest.data_hash.startswith("sha256:")
+    assert manifest.forms_request_url == "https://example.com/forms/request"
 
 
 def test_write_release_manifest_roundtrips(tmp_path: Path) -> None:
@@ -42,6 +44,7 @@ def test_write_release_manifest_roundtrips(tmp_path: Path) -> None:
         entrypoint="index.html",
         engine_modes=["inline_bm25"],
         source="Kaoru2WD/RAG_Engine",
+        forms_request_url="https://example.com/forms/request",
     )
     path = write_release_manifest(tmp_path / "latest-manifest.json", manifest)
 

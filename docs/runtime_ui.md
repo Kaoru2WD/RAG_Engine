@@ -2,10 +2,12 @@
 
 ## 目的
 
-共通 UI で次の 2 系統を切り替える。
+共通 UI で次を切り替える。
 
 - `Inline BM25`
+- `Local Vector`
 - `Hybrid Server`
+- `Admin`
 
 ## 表示項目
 
@@ -13,6 +15,8 @@
 - 想定ソースを選んだ場合の `Top1 PASS / FAIL`
 - 応答時間 `elapsed sec`
 - `Benchmark` タブでの評価ケース一括確認
+- `Admin` タブでのカテゴリ確認
+- `Admin` タブでの `forms URL` 入力と manifest プレビュー
 
 ## Hybrid 前提
 

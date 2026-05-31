@@ -26,6 +26,7 @@ def build_manifest(
     engine_modes: list[str],
     source: str,
     release_notes: list[str],
+    forms_request_url: str | None = None,
 ) -> ReleaseManifest:
     built_at = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
     return ReleaseManifest(
@@ -41,6 +42,7 @@ def build_manifest(
         engine_modes=engine_modes,
         source=source,
         release_notes=release_notes,
+        forms_request_url=forms_request_url,
     )
 
 
@@ -57,6 +59,7 @@ def main() -> None:
     parser.add_argument("--engine-mode", action="append", dest="engine_modes", required=True)
     parser.add_argument("--source", default="Kaoru2WD/RAG_Engine")
     parser.add_argument("--release-note", action="append", default=[])
+    parser.add_argument("--forms-url")
     parser.add_argument("--output", type=Path, default=Path("web/latest-manifest.json"))
     args = parser.parse_args()
 
@@ -72,6 +75,7 @@ def main() -> None:
         engine_modes=args.engine_modes,
         source=args.source,
         release_notes=args.release_note,
+        forms_request_url=args.forms_url,
     )
     write_release_manifest(args.output, manifest)
     print(args.output)

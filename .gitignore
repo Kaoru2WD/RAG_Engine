@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 .pytest_tmp/
 .pytest_tmp_exe*/
+.pytest_tmp_admin/
 *.pyc
 *.egg-info/
 data/
@@ -14,3 +15,5 @@ build/
 dist_runtime/
 dist/
 web/*.log
+*.out.log
+*.err.log

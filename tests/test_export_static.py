@@ -8,6 +8,7 @@ def test_build_static_index_contains_redacted_chunks() -> None:
     payload, dry_run = build_static_index(
         Path("sample_data/documents"),
         placeholder_path=Path("placeholder_rules.example.json"),
+        forms_request_url="https://example.com/forms/request",
     )
 
     assert payload["meta"]["document_count"] == 3
@@ -15,6 +16,8 @@ def test_build_static_index_contains_redacted_chunks() -> None:
     assert "source_path" not in payload["chunks"][0]
     assert payload["chunks"][0]["source_url"].startswith("file:///")
     assert payload["documents"][0]["chunk_count"] >= 1
+    assert payload["documents"][0]["categories"]["content_kind"]
+    assert payload["meta"]["forms_request_url"] == "https://example.com/forms/request"
     assert dry_run["chunks"][0]["raw_sha256"]
 
 

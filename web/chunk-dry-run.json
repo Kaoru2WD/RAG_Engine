@@ -3,8 +3,8 @@
     "documents_dir": "hils_rag_sample_docs",
     "chunk_size": 800,
     "chunk_overlap": 100,
-    "document_count": 10,
-    "chunk_count": 13,
+    "document_count": 11,
+    "chunk_count": 106,
     "placeholder_rule_count": 3,
     "note": "Raw chunk text is not persisted. This report stores only hashes and counts."
   },
@@ -67,13 +67,20 @@
     },
     {
       "document_ref": "DOC-009",
+      "file_type": "pdf",
+      "chunk_count": 93,
+      "raw_title_sha256": "a5185e2b9a791eae34d312b131e0e4703e043f65828871536833326a7a0d6b60",
+      "raw_path_sha256": "c2113cda6d781cecd3b99584b2425b6ac736e44b4a067ed7f3fb724aca32e19e"
+    },
+    {
+      "document_ref": "DOC-010",
       "file_type": "pptx",
       "chunk_count": 1,
       "raw_title_sha256": "2aca6d01d8fe454b913ffea83547e25057e63e91311dcc33ab57dc2bb9073021",
       "raw_path_sha256": "204bcceaeba8a2ac90fd77d8b3f94e393e32c0c973099951a6405968b5910471"
     },
     {
-      "document_ref": "DOC-010",
+      "document_ref": "DOC-011",
       "file_type": "pptx",
       "chunk_count": 1,
       "raw_title_sha256": "70e915e4b4807623921aa898646533e4f86df4d7a81767b57aeb912d6acfdaae",
@@ -172,14 +179,758 @@
     {
       "chunk_ref": "DOC-009-C000",
       "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "296d81ba8f7903fcee98ff01ad52f7e6e43f724e01d09c81ce6d16880b41e1d7",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 85
+    },
+    {
+      "chunk_ref": "DOC-009-C001",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "f26761d473fadda363a2e161e78bab3024417e1224227cd571ea9fb1bf35f186",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 51
+    },
+    {
+      "chunk_ref": "DOC-009-C002",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "8aae3a7cffa140d0e288f57b95ec60aa6c268a16f3a3e85b8626dcfb55c6ff15",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 75
+    },
+    {
+      "chunk_ref": "DOC-009-C003",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "9de8c6695b9682adfe1513827b63e8a99017668bcde9fb35434dbe8ab2789b2d",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 64
+    },
+    {
+      "chunk_ref": "DOC-009-C004",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "9e2058a756cb4c3c1856f7942620164bccc573bd4a176cdb7bcf70f61b0e7d35",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 49
+    },
+    {
+      "chunk_ref": "DOC-009-C005",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "2baf63a6245d94d7d76c0418b4feef2027297801d2d073daf80c7d40e4c1f4ff",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 41
+    },
+    {
+      "chunk_ref": "DOC-009-C006",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "ccb135838a34b65a11c24c1df8373895ae5072ee773d9234fc4a3f529959a617",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 50
+    },
+    {
+      "chunk_ref": "DOC-009-C007",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "9eaa717a08c0a4fcbb04c23e36fbb0a39eae914426e9ded0e8cfb20be5038842",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 116
+    },
+    {
+      "chunk_ref": "DOC-009-C008",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "2aa0c3730f41b30234e91f6c885ef9c30713b899123bdf3eab19b4e42cc41eab",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 92
+    },
+    {
+      "chunk_ref": "DOC-009-C009",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "1d8cef5b1b8f04442c2f857ad74d3cd62845b38b2b102ff1b2637e2e62504c8b",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 402
+    },
+    {
+      "chunk_ref": "DOC-009-C010",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "0092eb71509a6228731503bddb2a48b3f655ccdf58e04cae3f3bf6e17e0e75dd",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 391
+    },
+    {
+      "chunk_ref": "DOC-009-C011",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "920083603e29612f9b16d3c2d7fafe479868e0aed7ba26674397733243c9a20a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 383
+    },
+    {
+      "chunk_ref": "DOC-009-C012",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "7604b26a69ab8854af4a20bb8771d39f5f4fb2f48cac9216e4c8714639c3cdea",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 371
+    },
+    {
+      "chunk_ref": "DOC-009-C013",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "4a536f0b046629860a433cc51c36afd8be9ce650ceb078702443b94c77bca039",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 424
+    },
+    {
+      "chunk_ref": "DOC-009-C014",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "70b279309e7245d40029bff9ac0fab7cca79b32263cd99c77981a72c4bb7ea5b",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 425
+    },
+    {
+      "chunk_ref": "DOC-009-C015",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "722beb94f379a4b2b7b536db3a4288373a8d155a1029d07a5763452335dc877c",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 438
+    },
+    {
+      "chunk_ref": "DOC-009-C016",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "0b09cefd6a8924ddceb7be101d9db9a4618591f4fa589801bc7cd0e42e140d6a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 366
+    },
+    {
+      "chunk_ref": "DOC-009-C017",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "04ff967eda4a72d3ec3856612e3af16e8e59e79b6f3c897e5509a82edbecc9d9",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 394
+    },
+    {
+      "chunk_ref": "DOC-009-C018",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "8386880df8215a9e4942a2e3bc1bb56c892e12628f4d93767b8d529d0508f0fc",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 415
+    },
+    {
+      "chunk_ref": "DOC-009-C019",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "fe340d0299c77782c1fd73131ebdd6df4faaf88d446931de65bae55fc1055a0c",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 278
+    },
+    {
+      "chunk_ref": "DOC-009-C020",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "8f3b7ec469e695a737556c5fbcf5352530cee4f47ef2dbbd56cb36d7a4f80607",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 327
+    },
+    {
+      "chunk_ref": "DOC-009-C021",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "5ae5a568d0c49f45cb18fd4489d3d96169632d8d8c456bb39b8f68c621de05b0",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 347
+    },
+    {
+      "chunk_ref": "DOC-009-C022",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "131e57a535894e9eb2342d03205d61bd818ffc8c7f8d35fefe344c31056d68f3",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 428
+    },
+    {
+      "chunk_ref": "DOC-009-C023",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "93dd99069d21c877f839f1a611e97bce5288122197bebc51a9632cde2bebae0e",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 284
+    },
+    {
+      "chunk_ref": "DOC-009-C024",
+      "document_ref": "DOC-009",
+      "raw_char_count": 796,
+      "raw_sha256": "bcc1a0d5a1d656f974466e2f0483b3fc49debed0594f52580312861b3d3895cd",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 89
+    },
+    {
+      "chunk_ref": "DOC-009-C025",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "5105f3d8eb63cf6a0ee6fad8806debe00c7ae9cfd9d1c1e076cc6a729d2f4336",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 83
+    },
+    {
+      "chunk_ref": "DOC-009-C026",
+      "document_ref": "DOC-009",
+      "raw_char_count": 797,
+      "raw_sha256": "89b7d8520c74b7bfda725302f2afdaeb40c87545cdda1359be750942e2ab04bb",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 68
+    },
+    {
+      "chunk_ref": "DOC-009-C027",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "416e586f0e7d15aa161b10d0a71fd2a3f694cf645f3070850e5bd4060484af08",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 207
+    },
+    {
+      "chunk_ref": "DOC-009-C028",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "8c3baf1f24fb15528cdbfd0fceb64eaebfcefdf319a7580f26b642c1de91e827",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 276
+    },
+    {
+      "chunk_ref": "DOC-009-C029",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "1003ef83da2c43d5650258579cdc27f70e3025dd182f8131d61f161c3f3bbcae",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 433
+    },
+    {
+      "chunk_ref": "DOC-009-C030",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "76fd8fcffd66dbcef6a0f0c14fbe17acee09c03f3b797c1cd653713157d6f729",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 209
+    },
+    {
+      "chunk_ref": "DOC-009-C031",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "7d0107681c0bf861773b8b9d8863a9666e0ebb94e4f3e2158fdc071c6ebf6b0a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 110
+    },
+    {
+      "chunk_ref": "DOC-009-C032",
+      "document_ref": "DOC-009",
+      "raw_char_count": 796,
+      "raw_sha256": "8e95e159d9ff20169843bd239849be36803aec9f1926d25e37761b0c8846b5c5",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 172
+    },
+    {
+      "chunk_ref": "DOC-009-C033",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "416b09647cbedb6b764891521114cbf4e97590f5287594fe891edca30a2e5fd1",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 375
+    },
+    {
+      "chunk_ref": "DOC-009-C034",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "83a10bfea23dc47f3648f0d34352ad6d763c2ba155babb24583af45bccf936d3",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 400
+    },
+    {
+      "chunk_ref": "DOC-009-C035",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "ded0a6e8e2112d82c5fdbc5c8fa09952865e7f61fa949e2b72600ada89b979ff",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 282
+    },
+    {
+      "chunk_ref": "DOC-009-C036",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "ffe6cc20a8ec6ae877a5a3130fd5062a3fedc869fe954d774836fde33e6037cd",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 94
+    },
+    {
+      "chunk_ref": "DOC-009-C037",
+      "document_ref": "DOC-009",
+      "raw_char_count": 797,
+      "raw_sha256": "3591ec6901a457da9372714364d0a8c602d8bbdedfe830785dc569d026318cf3",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 93
+    },
+    {
+      "chunk_ref": "DOC-009-C038",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "1b8b13a5f29862a61865a9a6561c252014b402aad8e8912188118047aa653610",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 328
+    },
+    {
+      "chunk_ref": "DOC-009-C039",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "37ceb3368a1fd93c66fa6d072792c02e9e0daad45ecb901c3ee3dffad752a06d",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 383
+    },
+    {
+      "chunk_ref": "DOC-009-C040",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "655d98b8d17d47b6a08efee08e26571388c782c60f8d587e44b99b658f00593d",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 137
+    },
+    {
+      "chunk_ref": "DOC-009-C041",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "e2f753b5c0e750daf4b649af0c58bcbffafc636c3b9bc7e314ec9ef8a1263e92",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 348
+    },
+    {
+      "chunk_ref": "DOC-009-C042",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "da81d1d618e1076651223ae9f7cedc2342b3a0959b0f949b2056d49bdb7599f6",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 348
+    },
+    {
+      "chunk_ref": "DOC-009-C043",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "e300bdb01bb69cc04926772f7a3c67ca0c820929bc868182ba926f6413bcf1a5",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 300
+    },
+    {
+      "chunk_ref": "DOC-009-C044",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "4fbdaf774d3697dda54b97edc1ed8b11b64a8ef8b15100390fe9015a56e70e6c",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 243
+    },
+    {
+      "chunk_ref": "DOC-009-C045",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "ee8fad9b62134a9c4bc70a8e3b97b4200f134a8dcf56f212882d0b732801821c",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 335
+    },
+    {
+      "chunk_ref": "DOC-009-C046",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "c14af7817d7d5cfa95cb25b5c49e720a3fbb6b2a45a05a7ea660124ffc5e4775",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 384
+    },
+    {
+      "chunk_ref": "DOC-009-C047",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "2e89fd9d8678bb80c865d58fb7f1ae7718983678312f29dc1bc2cb0ce714e748",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 251
+    },
+    {
+      "chunk_ref": "DOC-009-C048",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "5c9f9805bfe6a1c8380bdbd9d97440a3ab71353c82f4cda4e44fccb141a09cec",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 123
+    },
+    {
+      "chunk_ref": "DOC-009-C049",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "ca28b8030ee49bf5ccb5c99cde8cfbe544943d29a530402d42d7afeb2c6230cb",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 181
+    },
+    {
+      "chunk_ref": "DOC-009-C050",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "55ff6313b59ac29ed12f086f06fe40988af6b9876d264d005610df30f522b0ec",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 340
+    },
+    {
+      "chunk_ref": "DOC-009-C051",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "bf4735d3cc11ead311a47873924fad91b50885cbfdc055fe4698d9e879c97601",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 377
+    },
+    {
+      "chunk_ref": "DOC-009-C052",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "92834cdd339eeb4653d36a893637ef4c729db0ac31d3cc325075f578484a19bf",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 340
+    },
+    {
+      "chunk_ref": "DOC-009-C053",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "d0f37efb555d7fa70fe1ac0fc04fc55f45ee9e75dfbb54cc635dfc32dde8bb51",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 105
+    },
+    {
+      "chunk_ref": "DOC-009-C054",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "bfad4174d12708a9ed106c1b5b832ff26be6612a4988462be641804b3c6e4ff7",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 324
+    },
+    {
+      "chunk_ref": "DOC-009-C055",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "60c81b57cd61e21b658befdad72c1a3e13624030c4aff14528fe6359753387a3",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 445
+    },
+    {
+      "chunk_ref": "DOC-009-C056",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "8a9a60b02051064ffcf200136aa5e865c4a816b3905de12ca68c77dec65afb27",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 364
+    },
+    {
+      "chunk_ref": "DOC-009-C057",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "2120b73b5c3cf206d87da173906844ffdbe781386b4ef191742aa741dccf2d42",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 421
+    },
+    {
+      "chunk_ref": "DOC-009-C058",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "bdcd92b24257a2b19e14c201af7d7291f873f1c8366717c764e6abeffd76c77e",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 419
+    },
+    {
+      "chunk_ref": "DOC-009-C059",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "aed2a6eadbfe2fdb73fe551eee0552a252c8a63a09302c8a6bb470e6605297f2",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 298
+    },
+    {
+      "chunk_ref": "DOC-009-C060",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "d460099ce1dad9da28b2db5c6e9a5a3ca3975074f993e76f7866949a8db2a62e",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 381
+    },
+    {
+      "chunk_ref": "DOC-009-C061",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "846e955d32c9eb9fe8b103a164c62f6c7009ee4e6e8b19692c5a7e5d5f80bde1",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 399
+    },
+    {
+      "chunk_ref": "DOC-009-C062",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "242def9183a0047e4ac15ede26c99529a6f67d801ad4f4e6d75ae4289b6ec71a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 355
+    },
+    {
+      "chunk_ref": "DOC-009-C063",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "edebff8f6efda3da15be64930f64844347accf1b99cfae9606e1d5222329c261",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 118
+    },
+    {
+      "chunk_ref": "DOC-009-C064",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "3142f3dc5a254e68841cb1518fa5498d98387952b56fdbc19613a4a4580a7aa8",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 134
+    },
+    {
+      "chunk_ref": "DOC-009-C065",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "7defdb32ddce4816ac8b4cc065867322ea931608d9f78bdd9a05dd9139ff546a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 113
+    },
+    {
+      "chunk_ref": "DOC-009-C066",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "2e86730ba9a864476b78bb881584cf9ceddc22e7f03d5453d6428c66eaf69a76",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 281
+    },
+    {
+      "chunk_ref": "DOC-009-C067",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "525e90a177c4f8dcfb731865fd54b2cde4d1d8afd5edf6af2f2f458deec00ded",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 349
+    },
+    {
+      "chunk_ref": "DOC-009-C068",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "0d300c5daee8a480f8bf2953db1328dc1555e490cd90910b0a0c679d4f901fca",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 408
+    },
+    {
+      "chunk_ref": "DOC-009-C069",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "959d6bf6082f9b327a224ffe7dffb1d11f6a1925fbfc7644ce2d29a29edbc011",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 383
+    },
+    {
+      "chunk_ref": "DOC-009-C070",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "4ad9a554ba22c0df11eb31957d46011e669c9807b6ef4443a393965ddabdaa2d",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 388
+    },
+    {
+      "chunk_ref": "DOC-009-C071",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "db389dbd9958363c935528ae36c2861d7124ecf03a0a1d4bb80eb2e5a29703b4",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 229
+    },
+    {
+      "chunk_ref": "DOC-009-C072",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "75e94fb738fbcf845d75306ede881a7464d71584361d50d85d71fdf757f659ed",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 232
+    },
+    {
+      "chunk_ref": "DOC-009-C073",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "dcfedec6f67c6f75dd39d8008d8d33d1f1ab63ecb4fb105884ebcb62052bff6b",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 114
+    },
+    {
+      "chunk_ref": "DOC-009-C074",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "d1864fcdf9b3c879ef8cff7690cc075dd36a35315b0c06aa7748a19ed6a0aee1",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 134
+    },
+    {
+      "chunk_ref": "DOC-009-C075",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "ab5c8a10487fb9d957036a536c9b3205421b631f792455001ddaca0d6fd95076",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 137
+    },
+    {
+      "chunk_ref": "DOC-009-C076",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "35d2ad0f7974079b18f7e7255d8b4b464defde6313c0f936a148a777916dc662",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 151
+    },
+    {
+      "chunk_ref": "DOC-009-C077",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "d4ab8695a8ed19f231500d0489c44da3cc2b1d4d000588838e3df59f15405624",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 171
+    },
+    {
+      "chunk_ref": "DOC-009-C078",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "dbf4327c08f3f46dcdba13574437bc75b85de1ca905273c432a6c5343a2e5af5",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 353
+    },
+    {
+      "chunk_ref": "DOC-009-C079",
+      "document_ref": "DOC-009",
+      "raw_char_count": 798,
+      "raw_sha256": "30ebd9a9138570e20511e2bacd76b62ba1541b3ea977612084f1d2462a2d079a",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 163
+    },
+    {
+      "chunk_ref": "DOC-009-C080",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "16ac10604899a87b0dfeb90b86d802a8ae761f3f18e6582effa69799ccebe991",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 262
+    },
+    {
+      "chunk_ref": "DOC-009-C081",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "eb145ca693b70eb857923d23ae8eb8bf6b82b1efb6a5fcd6a31ad2a97ce50025",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 320
+    },
+    {
+      "chunk_ref": "DOC-009-C082",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "621054721227bfe22efa68f2e7c1546432ac0fdf673d2763dce518b3ff8f306e",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 297
+    },
+    {
+      "chunk_ref": "DOC-009-C083",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "4a36d1445dcad57ba9c3f48766638ca889f79b9048c9cf0d6b4d317eb129b133",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 114
+    },
+    {
+      "chunk_ref": "DOC-009-C084",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "227a039b1c73fcd46e7e0dc241cbe2761971fdcaa48c6f55950a06707f4ca305",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 266
+    },
+    {
+      "chunk_ref": "DOC-009-C085",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "44056005a376d6907b3a5d3f86c74a62a434a5e38ef76d17c397bbf967b70cfe",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 411
+    },
+    {
+      "chunk_ref": "DOC-009-C086",
+      "document_ref": "DOC-009",
+      "raw_char_count": 799,
+      "raw_sha256": "fef12b8d4ab1ee97603b7b29496307e2916ca5d05ed01689c7b12d5df115145b",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 354
+    },
+    {
+      "chunk_ref": "DOC-009-C087",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "d9a921a9e79cccf7df6429444db229b5595d933eac394ddb92fea719c900b301",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 293
+    },
+    {
+      "chunk_ref": "DOC-009-C088",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "a37c271934f5ad4c9041de3176b16ef615d8f92bf7750bbcdaf959e2b353f4e5",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 339
+    },
+    {
+      "chunk_ref": "DOC-009-C089",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "ffc94b29302cd684ec47377106b74efed49fc117a0b670b52add3fa49ef50361",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 418
+    },
+    {
+      "chunk_ref": "DOC-009-C090",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "cb59dd5e80a88065b86680f33a97064664853618719604880a483b5835359b5e",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 384
+    },
+    {
+      "chunk_ref": "DOC-009-C091",
+      "document_ref": "DOC-009",
+      "raw_char_count": 800,
+      "raw_sha256": "536690bc5b1dbc9df5b6a49de50d6593af77b818a2b38ac54fe8263a1dee5bf8",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 278
+    },
+    {
+      "chunk_ref": "DOC-009-C092",
+      "document_ref": "DOC-009",
+      "raw_char_count": 592,
+      "raw_sha256": "285c62d22df6fa153595b24ffb9eb62109151fc57d7a2b89ddd00110cdb214c5",
+      "placeholder_keys": [],
+      "token_count_after_redaction": 214
+    },
+    {
+      "chunk_ref": "DOC-010-C000",
+      "document_ref": "DOC-010",
       "raw_char_count": 593,
       "raw_sha256": "aceb6b58935ca1522fd53788cce20859536833ffd00b1068c3d4b30c1ac6ec31",
       "placeholder_keys": [],
       "token_count_after_redaction": 107
     },
     {
-      "chunk_ref": "DOC-010-C000",
-      "document_ref": "DOC-010",
+      "chunk_ref": "DOC-011-C000",
+      "document_ref": "DOC-011",
       "raw_char_count": 569,
       "raw_sha256": "bcbf7066995e4499015ab8fb15121f2f588893993994ef9b887dc34bce93bdf6",
       "placeholder_keys": [],

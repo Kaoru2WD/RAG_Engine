@@ -10,6 +10,7 @@
   "entrypoint": "index.html",
   "engine_modes": ["inline_bm25", "vector", "hybrid"],
   "source": "Kaoru2WD/RAG_Engine",
+  "forms_request_url": "https://example.com/forms/procedure-request",
   "release_notes": [
     "Vector default changed to title_source_text_800",
     "Hybrid backend default points to /backend/query",

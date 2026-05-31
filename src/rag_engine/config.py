@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     default_top_k: int = 3
     placeholder_rules_path: Path = Field(default_factory=default_placeholder_rules_path)
     dry_run_report_path: Path = Field(default_factory=default_dry_run_report_path)
+    forms_request_url: str | None = None
     vector_embedding_provider: str = "auto"
     ollama_base_url: str = "http://127.0.0.1:11434"
     ollama_embedding_model: str = "nomic-embed-text"

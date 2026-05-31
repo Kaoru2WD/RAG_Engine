@@ -69,7 +69,7 @@ python -m uvicorn rag_engine.main:app --app-dir src --reload
 
 ```powershell
 $env:PYTHONPATH="src"
-python -m rag_engine.export_static
+python -m rag_engine.export_static --forms-url https://example.com/forms/procedure-request
 ```
 
 これで以下が再生成される。
@@ -79,6 +79,7 @@ python -m rag_engine.export_static
 
 `chunk-dry-run.json` には原文のハッシュと件数だけを残す。生チャンク本文は保存しない。
 `search-data.js` には `source_url` を含めるため、HTML から元ドキュメントをすぐ開ける。
+`--forms-url` を付けると、`Admin` タブの既定値と manifest プレビューにも埋め込まれる。
 
 ## ローカル ベクトルDB
 
@@ -138,6 +139,7 @@ curl -X POST http://127.0.0.1:8000/query `
 共通 UI はサーバ配信前提なので、`http://127.0.0.1:8000/ui` から開く。
 検索結果は画面下部のプロンプト欄から Copilot / Gemini サイドバーに貼り付けて、自然言語の回答整形へ回せる。
 `Sources` タブにはチャンク化したソース一覧を保持し、各文書を `開く` ボタンから直接参照できる。
+`Admin` タブでは、カテゴリ推定の確認、手順書作成依頼フォーム URL の入力、manifest プレビューとダウンロードができる。
 
 ## 検索 UI
 

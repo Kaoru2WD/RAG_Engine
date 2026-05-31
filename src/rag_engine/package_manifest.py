@@ -23,6 +23,7 @@ class ReleaseManifest(BaseModel):
     engine_modes: list[EngineMode] = Field(min_length=1)
     source: str = Field(min_length=1)
     release_notes: list[str] = Field(default_factory=list)
+    forms_request_url: str | HttpUrl | None = None
     minimum_runtime: str = Field(default="static-browser")
 
 

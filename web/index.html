@@ -28,7 +28,7 @@
     h1 { font-size: 28px; }
     h2 { font-size: 16px; }
     p { margin: 0; line-height: 1.7; color: var(--muted); }
-    .meta-row, .operator-list, .catalog-list, .tab-strip, .detail-actions, .eval-row {
+    .meta-row, .operator-list, .catalog-list, .tab-strip, .detail-actions, .eval-row, .admin-grid, .admin-actions {
       margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;
     }
     .chip {
@@ -52,8 +52,8 @@
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
     .layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 14px; }
-    .result-list, .source-list, .benchmark-list { display: grid; gap: 10px; }
-    .result-item, .source-item, .benchmark-item { padding: 14px; border: 1px solid var(--line); }
+    .result-list, .source-list, .benchmark-list, .admin-list { display: grid; gap: 10px; }
+    .result-item, .source-item, .benchmark-item, .admin-item { padding: 14px; border: 1px solid var(--line); }
     .result-item { cursor: pointer; }
     .result-item.active { border-color: var(--accent); background: var(--accent-soft); }
     .result-head, .source-head, .benchmark-head {
@@ -69,8 +69,13 @@
     .empty { color: var(--muted); line-height: 1.7; }
     mark { background: #fff2c2; color: inherit; padding: 0 2px; }
     textarea { min-height: 180px; resize: vertical; font-family: var(--mono); font-size: 13px; line-height: 1.6; }
+    .admin-layout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 14px; }
+    .admin-field { display: grid; gap: 6px; margin-top: 10px; }
+    .admin-label { font-weight: 700; font-size: 13px; }
+    .admin-meta { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .admin-manifest { min-height: 240px; }
     @media (max-width: 900px) {
-      .layout, .query-row, .eval-grid { grid-template-columns: 1fr; }
+      .layout, .query-row, .eval-grid, .admin-layout { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -87,6 +92,7 @@
         <button class="tab-button active" data-tab="searchTab">Search</button>
         <button class="tab-button secondary" data-tab="sourcesTab">Sources</button>
         <button class="tab-button secondary" data-tab="benchmarkTab">Benchmark</button>
+        <button class="tab-button secondary" data-tab="adminTab">Admin</button>
       </div>
       <div class="query-row">
         <input id="queryInput" type="search" placeholder='例: +CAN通信 "確認項目" -旧版 source:can'>
@@ -147,6 +153,41 @@
       <div class="eval-row" id="benchmarkSummary"></div>
       <div class="benchmark-list" id="benchmarkList"></div>
     </section>
+
+    <section id="adminTab" class="panel tab-panel">
+      <div class="benchmark-head">
+        <div>
+          <h2>Admin Mode</h2>
+          <p>カテゴリ推定の確認、手順書作成依頼フォーム URL の指定、manifest プレビューをまとめる。</p>
+        </div>
+      </div>
+      <div class="admin-layout">
+        <section>
+          <h2>カテゴリ確認</h2>
+          <div class="eval-row" id="categorySummary"></div>
+          <div class="admin-list" id="adminCategoryList"></div>
+        </section>
+        <aside>
+          <section class="catalog">
+            <h2>配布設定</h2>
+            <div class="admin-field">
+              <label class="admin-label" for="formsUrlInput">手順書作成依頼フォーム URL</label>
+              <input id="formsUrlInput" type="url" placeholder="https://example.com/forms/procedure-request">
+              <div class="admin-meta" id="formsUrlMeta">manifest と UI 用のプレビューを更新する。</div>
+            </div>
+            <div class="admin-actions">
+              <button id="refreshManifestButton">Manifest Preview 更新</button>
+              <button id="copyManifestButton" class="secondary">Manifest コピー</button>
+              <button id="downloadManifestButton" class="secondary">Manifest 保存</button>
+            </div>
+          </section>
+          <section class="prompt-box">
+            <h2>Manifest Preview</h2>
+            <textarea id="manifestPreview" class="admin-manifest" readonly></textarea>
+          </section>
+        </aside>
+      </div>
+    </section>
   </main>
 
   <script src="/ui-assets/search-data.js"></script>
@@ -169,10 +210,19 @@
     const searchEvalRow = document.getElementById("searchEvalRow");
     const benchmarkSummary = document.getElementById("benchmarkSummary");
     const benchmarkList = document.getElementById("benchmarkList");
+    const categorySummary = document.getElementById("categorySummary");
+    const adminCategoryList = document.getElementById("adminCategoryList");
+    const formsUrlInput = document.getElementById("formsUrlInput");
+    const formsUrlMeta = document.getElementById("formsUrlMeta");
+    const manifestPreview = document.getElementById("manifestPreview");
+    const refreshManifestButton = document.getElementById("refreshManifestButton");
+    const copyManifestButton = document.getElementById("copyManifestButton");
+    const downloadManifestButton = document.getElementById("downloadManifestButton");
 
     const JAPANESE_STOPWORDS = new Set(["は","が","を","に","で","と","へ","も","や","の","か","ね","よ","ぞ","さ","な","わ","だけ","まで","より","ほど","など","について","として"]);
     const TOKEN_PATTERN = /[A-Za-z0-9_]+|[一-龯]+|[ァ-ヴー]+|[ぁ-ゖ]+/g;
     const index = buildIndex(searchData.chunks);
+    let loadedManifest = null;
 
     function extractSearchTerms(text) {
       const terms = [];
@@ -490,6 +540,91 @@
         : `<div class="empty">プレースホルダ規則なし。</div>`;
     }
 
+    function renderAdminCategories() {
+      const summary = searchData.meta.category_summary || {};
+      const chips = [];
+      for (const [group, values] of Object.entries(summary)) {
+        for (const [name, count] of Object.entries(values)) {
+          chips.push(chip(`${group}:${name}=${count}`));
+        }
+      }
+      categorySummary.innerHTML = chips.length ? chips.join("") : `<div class="empty">カテゴリ推定なし。</div>`;
+
+      adminCategoryList.innerHTML = searchData.documents.map((document) => {
+        const categories = document.categories || {};
+        const tags = categories.tags || [];
+        const matched = categories.matched_keywords || [];
+        return `
+          <article class="admin-item">
+            <div class="source-head">
+              <div class="source-title">${escapeHtml(document.title)}</div>
+              <div class="admin-meta">${escapeHtml(document.document_ref)}</div>
+            </div>
+            <div class="source-meta">${escapeHtml(document.source_label)} / ${escapeHtml(document.file_type.toUpperCase())}</div>
+            <div class="admin-grid">
+              ${chip(`source_area=${categories.source_area || "unknown"}`)}
+              ${chip(`domain=${categories.domain || "unknown"}`)}
+              ${chip(`content_kind=${categories.content_kind || "unknown"}`)}
+              ${chip(`inference=${categories.inference_source || "unknown"}`)}
+            </div>
+            <div class="admin-meta">tags: ${escapeHtml(tags.join(", ") || "(none)")}</div>
+            <div class="admin-meta">matched_keywords: ${escapeHtml(matched.join(", ") || "(none)")}</div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadLatestManifest() {
+      try {
+        const response = await fetch("/ui-assets/latest-manifest.json", { cache: "no-store" });
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function currentFormsUrl() {
+      return formsUrlInput.value.trim();
+    }
+
+    function buildManifestPreview() {
+      const defaults = searchData.meta.release_manifest_defaults || {};
+      const manifest = loadedManifest || {};
+      const formsRequestUrl = currentFormsUrl() || manifest.forms_request_url || defaults.forms_request_url || null;
+      const preview = {
+        package_id: manifest.package_id || defaults.package_id || "hils-procedure-rag",
+        display_name: manifest.display_name || defaults.display_name || "HILS Procedure Search",
+        channel: manifest.channel || defaults.channel || "company",
+        version: manifest.version || "REPLACE_VERSION",
+        built_at: manifest.built_at || "REPLACE_BUILT_AT",
+        package_hash: manifest.package_hash || "sha256:REPLACE_PACKAGE_HASH",
+        data_hash: manifest.data_hash || "sha256:REPLACE_DATA_HASH",
+        download_url: manifest.download_url || "./releases/hils-rag-package.zip",
+        entrypoint: manifest.entrypoint || defaults.entrypoint || "index.html",
+        engine_modes: manifest.engine_modes || defaults.engine_modes || ["inline_bm25", "vector", "hybrid"],
+        source: manifest.source || defaults.source || "Kaoru2WD/RAG_Engine",
+        forms_request_url: formsRequestUrl,
+        release_notes: manifest.release_notes || ["REPLACE_RELEASE_NOTE"],
+        minimum_runtime: manifest.minimum_runtime || "static-browser"
+      };
+      manifestPreview.value = JSON.stringify(preview, null, 2);
+      formsUrlMeta.textContent = formsRequestUrl
+        ? `current forms URL: ${formsRequestUrl}`
+        : "forms URL 未指定。配布前に入力すること。";
+      return preview;
+    }
+
+    function downloadManifest(preview) {
+      const blob = new Blob([JSON.stringify(preview, null, 2) + "\n"], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "latest-manifest.json";
+      anchor.click();
+      URL.revokeObjectURL(url);
+    }
+
     async function runSearch() {
       const query = queryInput.value.trim();
       if (!query) {
@@ -619,17 +754,39 @@
       await navigator.clipboard.writeText(llmPrompt.value);
       statusLine.textContent = "Prompt copied for Copilot/Gemini.";
     });
+    refreshManifestButton.addEventListener("click", () => {
+      buildManifestPreview();
+      statusLine.textContent = "Manifest preview refreshed.";
+    });
+    copyManifestButton.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(manifestPreview.value);
+      statusLine.textContent = "Manifest copied.";
+    });
+    downloadManifestButton.addEventListener("click", () => {
+      const preview = buildManifestPreview();
+      downloadManifest(preview);
+      statusLine.textContent = "Manifest download started.";
+    });
+    formsUrlInput.addEventListener("input", () => {
+      buildManifestPreview();
+    });
 
     setupTabs();
     renderMetrics();
     renderOperatorHelp();
     renderPlaceholderCatalog();
+    renderAdminCategories();
     renderExpectedSourceSelect();
     renderSourceList();
     benchmarkSummary.innerHTML = chip(`cases ${(searchData.meta.evaluation_cases || []).length}`);
     statusLine.textContent = `index ready / ${searchData.meta.document_count || 0} docs / ${searchData.meta.chunk_count || 0} chunks`;
+    formsUrlInput.value = searchData.meta.forms_request_url || "";
     queryInput.value = 'inverter boot sequence のチェックリストは？';
     expectedSourceSelect.value = 'html\\inverter_boot_sequence_checklist.html';
+    void loadLatestManifest().then((manifest) => {
+      loadedManifest = manifest;
+      buildManifestPreview();
+    });
     void runSearch();
   </script>
 </body>

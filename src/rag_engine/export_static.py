@@ -3,6 +3,7 @@ import hashlib
 import json
 from pathlib import Path
 
+from rag_engine.categorization import infer_document_categories, summarize_categories
 from rag_engine.chunking import chunk_document
 from rag_engine.config import settings
 from rag_engine.extractors import discover_documents, extract_document
@@ -17,7 +18,11 @@ def load_evaluation_cases(documents_dir: Path) -> list[dict]:
     return json.loads(evaluation_path.read_text(encoding="utf-8"))
 
 
-def build_static_index(documents_dir: Path, placeholder_path: Path | None = None) -> tuple[dict, dict]:
+def build_static_index(
+    documents_dir: Path,
+    placeholder_path: Path | None = None,
+    forms_request_url: str | None = None,
+) -> tuple[dict, dict]:
     rules = load_placeholder_rules(placeholder_path)
     evaluation_cases = load_evaluation_cases(documents_dir)
     documents = []
@@ -29,8 +34,10 @@ def build_static_index(documents_dir: Path, placeholder_path: Path | None = None
         document = extract_document(path)
         document_chunks = chunk_document(document, settings.chunk_size, settings.chunk_overlap)
         document_ref = f"DOC-{document_number:03d}"
+        relative_path = path.relative_to(documents_dir)
+        categories = infer_document_categories(relative_path, document.title, document.file_type, document.content)
         safe_title, title_keys = apply_placeholders(document.title, rules)
-        safe_path, path_keys = apply_placeholders(str(path.relative_to(documents_dir)), rules)
+        safe_path, path_keys = apply_placeholders(str(relative_path), rules)
 
         documents.append(
             {
@@ -39,6 +46,7 @@ def build_static_index(documents_dir: Path, placeholder_path: Path | None = None
                 "source_url": path.resolve().as_uri(),
                 "title": safe_title,
                 "file_type": document.file_type,
+                "categories": categories,
                 "placeholder_keys": sorted(set(title_keys + path_keys)),
                 "chunk_count": len(document_chunks),
             }
@@ -70,6 +78,7 @@ def build_static_index(documents_dir: Path, placeholder_path: Path | None = None
                     "text": redacted_text,
                     "tokens": tokens,
                     "token_count": len(tokens),
+                    "categories": categories,
                     "placeholder_keys": matched_keys,
                 }
             )
@@ -103,6 +112,17 @@ def build_static_index(documents_dir: Path, placeholder_path: Path | None = None
                 {"syntax": "title:value", "meaning": "タイトル絞り込み"},
             ],
             "evaluation_cases": evaluation_cases,
+            "forms_request_url": forms_request_url,
+            "category_summary": summarize_categories(documents),
+            "release_manifest_defaults": {
+                "package_id": "hils-procedure-rag",
+                "display_name": "HILS Procedure Search",
+                "channel": "company",
+                "entrypoint": "index.html",
+                "engine_modes": ["inline_bm25", "vector", "hybrid"],
+                "source": "Kaoru2WD/RAG_Engine",
+                "forms_request_url": forms_request_url,
+            },
         },
         "documents": documents,
         "chunks": chunks,
@@ -123,16 +143,26 @@ def build_static_index(documents_dir: Path, placeholder_path: Path | None = None
     return payload, dry_run
 
 
-def write_static_index(output_path: Path, documents_dir: Path, placeholder_path: Path | None = None) -> Path:
-    payload, _ = build_static_index(documents_dir, placeholder_path=placeholder_path)
+def write_static_index(
+    output_path: Path,
+    documents_dir: Path,
+    placeholder_path: Path | None = None,
+    forms_request_url: str | None = None,
+) -> Path:
+    payload, _ = build_static_index(documents_dir, placeholder_path=placeholder_path, forms_request_url=forms_request_url)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     js = "window.SEARCH_DATA = " + json.dumps(payload, ensure_ascii=False, indent=2) + ";\n"
     output_path.write_text(js, encoding="utf-8")
     return output_path
 
 
-def write_dry_run_report(output_path: Path, documents_dir: Path, placeholder_path: Path | None = None) -> Path:
-    _, dry_run = build_static_index(documents_dir, placeholder_path=placeholder_path)
+def write_dry_run_report(
+    output_path: Path,
+    documents_dir: Path,
+    placeholder_path: Path | None = None,
+    forms_request_url: str | None = None,
+) -> Path:
+    _, dry_run = build_static_index(documents_dir, placeholder_path=placeholder_path, forms_request_url=forms_request_url)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(dry_run, ensure_ascii=False, indent=2), encoding="utf-8")
     return output_path
@@ -148,17 +178,20 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("web/search-data.js"))
     parser.add_argument("--dry-run-output", type=Path, default=settings.dry_run_report_path)
     parser.add_argument("--placeholder-rules", type=Path, default=settings.placeholder_rules_path)
+    parser.add_argument("--forms-url", default=settings.forms_request_url)
     args = parser.parse_args()
 
     dry_run_path = write_dry_run_report(
         output_path=args.dry_run_output,
         documents_dir=args.documents_dir,
         placeholder_path=args.placeholder_rules,
+        forms_request_url=args.forms_url,
     )
     export_path = write_static_index(
         output_path=args.output,
         documents_dir=args.documents_dir,
         placeholder_path=args.placeholder_rules,
+        forms_request_url=args.forms_url,
     )
     print(dry_run_path)
     print(export_path)
